@@ -3,7 +3,6 @@ const mongoose = require('mongoose')
 const postSchema = mongoose.Schema({
     penulis: {
         type: String,
-        unique: true,
         required: true
     },
     img: {
@@ -18,9 +17,15 @@ const postSchema = mongoose.Schema({
         type: String,
         required: [true, 'Judul harus diisi!']
     },
+    slug: {
+        type: String
+    },
     content: {
         type: String,
         required: [true, 'Content harus diisi!']
+    },
+    created_at: {
+        type: String,
     }
 })
 

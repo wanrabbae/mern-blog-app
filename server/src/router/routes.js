@@ -9,6 +9,8 @@ router.get('/', (req, res) => {
 
 // ------- POST ---------
 router.get('/posts', postsController.getAllPost)
+router.get('/posts/:user', postsController.getAllPostUser)
+router.get('/post/:slug', postsController.getPostBySlug)
 router.post('/posts', postsController.createPost)
 
 // ------- POST ---------
