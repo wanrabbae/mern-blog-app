@@ -17,14 +17,15 @@ const postSchema = mongoose.Schema({
         type: String,
         required: [true, 'Judul harus diisi!']
     },
-    slug: {
-        type: String
-    },
     content: {
         type: String,
-        required: [true, 'Content harus diisi!']
+        required: [true, 'Content harus diisi!'],
+        maxLength: [30000, 'Content maximal hanya 30000 karakter']
     },
     created_at: {
+        type: String,
+    },
+    updated_at: {
         type: String,
     }
 })

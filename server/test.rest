@@ -1,12 +1,25 @@
+GET http://localhost:4000/posts
+
 # POST http://localhost:4000/posts
 # Content-Type: application/json
 
 # {
-#     "penulis": "owlxx",
-#     "img": "python.jpg",
-#     "kategori": "python",
-#     "judul": "belajar fundamental python",
-#     "content": "lorem ipsumm daily hard works"
+#     "penulis": "void",
+#     "img": "React.png",
+#     "kategori": "React js",
+#     "judul": "Fundamental React Js",
+#     "content": "Halo semuanya kali ini saya akan membagikan cara connect ke database mongo db menggunakan React js"
 # }
 
-GET http://localhost:4000/posts
+# PUT http://localhost:4000/posts/60e12e5e85a23b47d81f665e
+# Content-Type: application/json
+
+# {
+#     "penulis": "alwan",
+#     "img": "Next.png",
+#     "kategori": "Next.js",
+#     "judul": "Fundamental Next",
+#     "content": "Halo semuanya kali ini saya akan membagikan cara connect ke database mongo db menggunakan Next js"
+# }
+
+# DELETE http://localhost:4000/posts/60debeb140ec6b4a3f924a4e

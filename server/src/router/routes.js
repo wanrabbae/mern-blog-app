@@ -9,10 +9,11 @@ router.get('/', (req, res) => {
 
 // ------- POST ---------
 router.get('/posts', postsController.getAllPost)
-router.get('/posts/:user', postsController.getAllPostUser)
-router.get('/post/:slug', postsController.getPostBySlug)
+router.get('/post/user/:user', postsController.getAllPostUser)
+router.get('/post/:id', postsController.getPostById)
 router.post('/posts', postsController.createPost)
-
+router.put('/posts/:id', postsController.updatePost)
+router.delete('/posts/:id', postsController.deletePost)
 // ------- POST ---------
 
 module.exports = router
