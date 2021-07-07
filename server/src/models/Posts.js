@@ -7,7 +7,7 @@ const postSchema = mongoose.Schema({
     },
     img: {
         type: String,
-        required: [true, 'Gambar wajib di upload!']
+        required: [true, 'Gambar harus di upload!']
     },
     kategori: {
         type: String,

@@ -1,11 +1,20 @@
 const express = require('express')
 const postsController = require('../controllers/postsController')
+const authController = require('../controllers/authController')
 
 const router = express.Router()
 
 router.get('/', (req, res) => {
     res.send("<h2>Error 404 Page Not Found!!</h2>")
 })
+
+// ------- AUTH ---------
+
+router.post('/signup', authController.signUp)
+router.get('/users', authController.getAllUsers)
+router.delete('/delete/:email', authController.deleteUserByEmail)
+
+// ------- AUTH ---------
 
 // ------- POST ---------
 router.get('/posts', postsController.getAllPost)
