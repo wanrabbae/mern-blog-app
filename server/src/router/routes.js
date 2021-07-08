@@ -10,8 +10,9 @@ router.get('/', (req, res) => {
 
 // ------- AUTH ---------
 
-router.post('/signup', authController.signUp)
 router.get('/users', authController.getAllUsers)
+router.post('/signup', authController.signUp)
+router.post('/login', authController.login)
 router.delete('/delete/:email', authController.deleteUserByEmail)
 
 // ------- AUTH ---------

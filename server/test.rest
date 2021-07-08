@@ -1,17 +1,25 @@
 # ---------- AUTH -----------
 
-GET http://localhost:4000/users
+# GET http://localhost:4000/users
 
 # POST http://localhost:4000/signup
 # Content-Type: application/json
 
 # {
-#     "nama": "Akhmad Alwan",
-#     "email": "alwan@gmail.com",
-#     "password": "lolipop234"
+#     "nama": "owlxx",
+#     "email": "owlxx@gmail.com",
+#     "password": "owlxx123"
 # }
 
-# DELETE http://localhost:4000/delete/alwanrabbae@gmail.com
+POST http://localhost:4000/login
+Content-Type: application/json
+
+{
+    "email": "owlxx@gmail.com",
+    "password": "owlxx123"
+}
+
+# DELETE http://localhost:4000/delete/wanwan@gmail.com
 
 # ---------- AUTH -----------
 

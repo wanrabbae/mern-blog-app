@@ -1,6 +1,27 @@
 const AuthModel = require('../models/Auth')
 const bcrypt = require('bcrypt')
 
+// error handling
+const errorHandler = (err) => {
+    let errors = {
+        nama: '',
+        email: '',
+        password: ''
+    }
+
+    if (err.code === 11000) {
+        errors.email = 'Email sudah terdaftar!'
+    } else if (err.message.includes('auth validation failed')) {
+        Object.values(err.errors).forEach(({
+            properties
+        }) => {
+            errors[properties.path] = properties.message
+        })
+    }
+
+    return errors
+}
+
 // sign up
 module.exports.signUp = async (req, res) => {
     try {
@@ -17,25 +38,53 @@ module.exports.signUp = async (req, res) => {
         res.status(201).json({
             user: user._id,
             status: 'success',
-            message: 'Berhasil sign up!'
+            message: 'Sign up berhasil!'
         })
     } catch (err) {
-        res.json({
-            status: 'failed'
+        const errors = errorHandler(err)
+        res.status(400).json({
+            status: 'failed',
+            err: errors
+
         })
-        console.log(err.message);
     }
 }
 
 // login
-module.exports.login = (req, res) => {
+module.exports.login = async (req, res) => {
     try {
-        res.json(req.body)
+        const findUser = await AuthModel.findOne({
+            email: req.body.email
+        })
+
+        if (!findUser) {
+            res.status(404).json({
+                status: 'failed',
+                message: 'Email yang anda masukan salah!'
+            })
+        }
+
+        // check password
+        const auth = await bcrypt.compare(req.body.password, findUser.password)
+
+        if (!auth) {
+            res.status(400).json({
+                status: 'failed',
+                message: 'Password yang anda masukan salah!'
+            })
+        }
+
+        // sampe sini berhasil
+        res.status(200).json({
+            user: findUser._id,
+            status: 'success',
+            message: 'Log in berhasil!'
+        })
+
     } catch (err) {
         res.json({
             status: 'failed'
         })
-        console.log(err.message);
     }
 }
 
