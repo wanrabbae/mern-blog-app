@@ -19,8 +19,9 @@ router.delete('/delete/:email', authController.deleteUserByEmail)
 
 // ------- POST ---------
 router.get('/posts', postsController.getAllPost)
-router.get('/post/user/:user', postsController.getAllPostUser)
+router.get('/posts/user/:user', postsController.getAllPostUser)
 router.get('/post/:id', postsController.getPostById)
+router.get('/posts/:kategori', postsController.getPostByKategori)
 router.post('/posts', postsController.createPost)
 router.put('/posts/:id', postsController.updatePost)
 router.delete('/posts/:id', postsController.deletePost)

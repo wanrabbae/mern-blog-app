@@ -27,6 +27,7 @@ module.exports.getAllPost = async (req, res) => {
 
         res.status(200).json({
             status: "success",
+            dataCount: post.length,
             data: post
         })
     } catch (err) {
@@ -38,7 +39,7 @@ module.exports.getAllPost = async (req, res) => {
 
 // mengambil semua post berdasarkan user
 module.exports.getAllPostUser = async (req, res) => {
-    // "penulis" disini maksudnya adalah user
+    // "user" disini maksudnya adalah nama
     try {
         const postUser = await PostsModel.find({
             penulis: req.params.user
@@ -46,6 +47,7 @@ module.exports.getAllPostUser = async (req, res) => {
 
         res.status(200).json({
             status: "success",
+            dataCount: postUser.length,
             data: postUser
         })
     } catch (err) {
@@ -64,6 +66,26 @@ module.exports.getPostById = async (req, res) => {
 
         res.status(200).json({
             status: "success",
+            dataCount: post.length,
+            data: post
+        })
+    } catch (err) {
+        res.status(400).json({
+            message: err.message
+        })
+    }
+}
+
+// mengambil post berdasarkan kategori
+module.exports.getPostByKategori = async (req, res) => {
+    try {
+        const post = await PostsModel.find({
+            kategori: req.params.kategori
+        })
+
+        res.status(200).json({
+            status: "success",
+            dataCount: post.length,
             data: post
         })
     } catch (err) {
@@ -81,7 +103,7 @@ module.exports.createPost = async (req, res) => {
         const save = await PostsModel.create({
             penulis: data.penulis,
             img: data.img,
-            kategori: data.kategori,
+            kategori: data.kategori.toLowerCase(),
             judul: data.judul,
             content: data.content,
             created_at: new Date().toDateString(),
@@ -107,7 +129,7 @@ module.exports.updatePost = async (req, res) => {
     const update = await PostsModel.findByIdAndUpdate(id, {
             penulis: req.body.penulis,
             img: req.body.img,
-            kategori: req.body.kategori,
+            kategori: req.body.kategori.toLowerCase(),
             judul: req.body.judul,
             content: req.body.content,
             updated_at: new Date().toDateString(),
