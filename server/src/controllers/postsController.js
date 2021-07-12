@@ -22,85 +22,88 @@ const handleErrors = (err) => {
 
 // mengambil semua post
 module.exports.getAllPost = async (req, res) => {
-    try {
-        const post = await PostsModel.find()
-
-        res.status(200).json({
-            status: "success",
-            dataCount: post.length,
-            data: post
+    await PostsModel.find()
+        .then(result => {
+            res.status(200).json({
+                status: "success",
+                dataCount: result.length,
+                data: result
+            })
         })
-    } catch (err) {
-        res.status(400).json({
-            message: err.message
+        .catch(err => {
+            res.status(400).json({
+                status: 'failed',
+                message: err.message
+            })
         })
-    }
 }
 
 // mengambil semua post berdasarkan user
 module.exports.getAllPostUser = async (req, res) => {
-    // "user" disini maksudnya adalah nama
-    try {
-        const postUser = await PostsModel.find({
+    await PostsModel.find({
             penulis: req.params.user
         })
+        .then(result => {
+            res.status(200).json({
+                status: "success",
+                dataCount: result.length,
+                data: result
+            })
+        })
+        .catch(err => {
+            res.status(400).json({
+                status: 'failed',
+                message: err.message
+            })
+        })
 
-        res.status(200).json({
-            status: "success",
-            dataCount: postUser.length,
-            data: postUser
-        })
-    } catch (err) {
-        res.status(400).json({
-            message: err.message
-        })
-    }
 }
 
 // mengambil post berdasarkan id
 module.exports.getPostById = async (req, res) => {
-    try {
-        const post = await PostsModel.findOne({
+    await PostsModel.findOne({
             _id: req.params.id
         })
-
-        res.status(200).json({
-            status: "success",
-            dataCount: post.length,
-            data: post
+        .then(result => {
+            res.status(200).json({
+                status: "success",
+                dataCount: result.length,
+                data: result
+            })
         })
-    } catch (err) {
-        res.status(400).json({
-            message: err.message
+        .catch(err => {
+            res.status(400).json({
+                status: 'failed',
+                message: err.message
+            })
         })
-    }
 }
 
 // mengambil post berdasarkan kategori
 module.exports.getPostByKategori = async (req, res) => {
-    try {
-        const post = await PostsModel.find({
-            kategori: req.params.kategori
+    await PostsModel.find({
+            kategori: req.params.kategori.toLowerCase()
         })
-
-        res.status(200).json({
-            status: "success",
-            dataCount: post.length,
-            data: post
+        .then(result => {
+            res.status(200).json({
+                status: "success",
+                dataCount: result.length,
+                data: result
+            })
         })
-    } catch (err) {
-        res.status(400).json({
-            message: err.message
+        .catch(err => {
+            res.status(400).json({
+                status: 'failed',
+                message: err.message
+            })
         })
-    }
 }
 
 // membuat post
 module.exports.createPost = async (req, res) => {
     const data = req.body
 
-    try {
-        const save = await PostsModel.create({
+    await PostsModel.create({
             penulis: data.penulis,
             img: data.img,
             kategori: data.kategori.toLowerCase(),
@@ -109,24 +112,27 @@ module.exports.createPost = async (req, res) => {
             created_at: new Date().toDateString(),
             updated_at: new Date().toDateString()
         })
-
-        res.status(201).json({
-            status: "success",
-            message: "Berhasil membuat Post!"
+        .then(result => {
+            res.status(201).json({
+                status: "success",
+                message: "Berhasil membuat Post!",
+                data: result
+            })
         })
-    } catch (err) {
-        const errors = handleErrors(err)
-        res.status(400).json({
-            status: "failed",
-            error: errors
+        .catch(err => {
+            const errors = handleErrors(err)
+            res.status(400).json({
+                status: "failed",
+                error: errors
+            })
         })
-    }
 }
 
 // update post
 module.exports.updatePost = async (req, res) => {
     const id = req.params.id
-    const update = await PostsModel.findByIdAndUpdate(id, {
+
+    await PostsModel.findByIdAndUpdate(id, {
             penulis: req.body.penulis,
             img: req.body.img,
             kategori: req.body.kategori.toLowerCase(),
