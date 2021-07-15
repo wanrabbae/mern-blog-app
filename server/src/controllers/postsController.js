@@ -22,12 +22,27 @@ const handleErrors = (err) => {
 
 // mengambil semua post
 module.exports.getAllPost = async (req, res) => {
+    const currentPage = req.query.page || 1
+    const perPage = req.query.perPage || 5
+    let totalData
+
     await PostsModel.find()
+        .countDocuments()
+
+        .then(count => {
+            totalData = count
+            return PostsModel.find()
+                .skip((parseInt(currentPage) - 1) * parseInt(perPage))
+                .limit(parseInt(perPage))
+        })
+
         .then(result => {
             res.status(200).json({
                 status: "success",
-                dataCount: result.length,
-                data: result
+                data: result,
+                totalData: parseInt(totalData),
+                page: parseInt(currentPage),
+                perPage: parseInt(perPage)
             })
         })
         .catch(err => {
@@ -40,14 +55,31 @@ module.exports.getAllPost = async (req, res) => {
 
 // mengambil semua post berdasarkan user
 module.exports.getAllPostUser = async (req, res) => {
+    const currentPage = req.query.page || 1
+    const perPage = req.query.perPage || 5
+    let totalData
+
     await PostsModel.find({
             penulis: req.params.user
         })
+        .countDocuments()
+
+        .then(count => {
+            totalData = count
+            return PostsModel.find({
+                    penulis: req.params.user
+                })
+                .skip((parseInt(currentPage) - 1) * parseInt(perPage))
+                .limit(parseInt(perPage))
+        })
+
         .then(result => {
             res.status(200).json({
                 status: "success",
-                dataCount: result.length,
-                data: result
+                data: result,
+                totalData: parseInt(totalData),
+                page: parseInt(currentPage),
+                perPage: parseInt(perPage)
             })
         })
         .catch(err => {
@@ -80,6 +112,7 @@ module.exports.getPostById = async (req, res) => {
 }
 
 // mengambil post berdasarkan kategori
+// WARNING!! INI BELUM DI PAGINATION KARENA KATEGORI MSH SEDIKIT
 module.exports.getPostByKategori = async (req, res) => {
     await PostsModel.find({
             kategori: req.params.kategori.toLowerCase()
@@ -116,7 +149,7 @@ module.exports.createPost = async (req, res) => {
             res.status(201).json({
                 status: "success",
                 message: "Berhasil membuat Post!",
-                data: result
+                id: result._id
             })
         })
         .catch(err => {
