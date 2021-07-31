@@ -39,7 +39,7 @@ module.exports.getAllPost = async (req, res) => {
         .then(result => {
             res.status(200).json({
                 status: "success",
-                data: result,
+                blog: result,
                 totalData: parseInt(totalData),
                 page: parseInt(currentPage),
                 perPage: parseInt(perPage)
@@ -76,7 +76,7 @@ module.exports.getAllPostUser = async (req, res) => {
         .then(result => {
             res.status(200).json({
                 status: "success",
-                data: result,
+                blog: result,
                 totalData: parseInt(totalData),
                 page: parseInt(currentPage),
                 perPage: parseInt(perPage)
@@ -100,7 +100,7 @@ module.exports.getPostById = async (req, res) => {
             res.status(200).json({
                 status: "success",
                 dataCount: result.length,
-                data: result
+                blog: result
             })
         })
         .catch(err => {
@@ -121,7 +121,7 @@ module.exports.getPostByKategori = async (req, res) => {
             res.status(200).json({
                 status: "success",
                 dataCount: result.length,
-                data: result
+                blog: result
             })
         })
         .catch(err => {
@@ -135,6 +135,8 @@ module.exports.getPostByKategori = async (req, res) => {
 // membuat post
 module.exports.createPost = async (req, res) => {
     const data = req.body
+
+    console.log(req.headers);
 
     await PostsModel.create({
             penulis: data.penulis,

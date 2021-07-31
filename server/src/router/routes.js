@@ -23,7 +23,7 @@ router.get('/posts/user/:user', postsController.getAllPostUser)
 router.get('/post/:id', postsController.getPostById)
 router.get('/posts/:kategori', postsController.getPostByKategori)
 router.post('/posts', postsController.createPost)
-router.put('/posts/:id', postsController.updatePost)
+router.patch('/posts/:id', postsController.updatePost)
 router.delete('/posts/:id', postsController.deletePost)
 // ------- POST ---------
 

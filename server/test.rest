@@ -25,30 +25,31 @@
 
 # ---------- POST -----------
 
-GET http://localhost:4000/posts/user/alwan
+GET http://localhost:4000/posts?page=1
 
 # POST http://localhost:4000/posts
 # Content-Type: application/json
+# Authorization: alwan
 
 # {
 #     "penulis": "alwan",
-#     "img": "Anime.png",
-#     "kategori": "Anime Js",
-#     "judul": "Fundamental Anime Js ",
-#     "content": "Halo semuanya kali ini saya akan membagikan belajar fundamental Anime Js"
+#     "img": "Aos.png",
+#     "kategori": "Aos Js",
+#     "judul": "Fundamental Aos Js ",
+#     "content": "Halo semuanya kali ini saya akan membagikan belajar fundamental Aos Js"
 # }
 
-# PUT http://localhost:4000/posts/60e12e3b85a23b47d81f665c
-# Content-Type: application/json
+PATCH http://localhost:4000/posts/60ebc99cff7a49624f2725f4
+Content-Type: application/json
 
-# {
-#     "penulis": "void",
-#     "img": "ReactHook.png",
-#     "kategori": "React js",
-#     "judul": "Fundamental React js ",
-#     "content": "Halo semuanya kali ini saya akan membagikan belajar fundamental react hook"
-# }
+{
+    "penulis": "void",
+    "img": "Laravel.png",
+    "kategori": "Laravel",
+    "judul": "Fundamental Laravel 8",
+    "content": "Halo semuanya kali ini saya akan membagikan belajar fundamental react hook"
+}
 
-# DELETE http://localhost:4000/posts/60debeb140ec6b4a3f924a4e
+# DELETE http://localhost:4000/posts/6102512d0d958d244a2ac3ee
 
 # ---------- POST -----------
