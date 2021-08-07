@@ -1,5 +1,6 @@
 const AuthModel = require('../models/Auth')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 // error handling
 const errorHandler = (err) => {
@@ -22,17 +23,30 @@ const errorHandler = (err) => {
     return errors
 }
 
+const createToken = (email) => {
+    return jwt.sign({
+        email
+    }, 'testing', {
+        expiresIn: '1h'
+    })
+}
+
 // sign up
-module.exports.signUp = async (req, res) => {
+exports.signUp = async (req, res) => {
+    const {
+        nama,
+        email,
+        password
+    } = req.body
+
     try {
         // hash password
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(req.body.password, salt)
+        const hashedPassword = await bcrypt.hash(password, 10)
 
         const user = await AuthModel.create({
-            nama: req.body.nama,
-            email: req.body.email,
-            password: hashedPassword
+            nama: nama,
+            email: email,
+            password: hashedPassword,
         })
 
         res.status(201).json({
@@ -51,7 +65,7 @@ module.exports.signUp = async (req, res) => {
 }
 
 // login
-module.exports.login = async (req, res) => {
+exports.login = async (req, res) => {
     try {
         const findUser = await AuthModel.findOne({
             email: req.body.email
@@ -88,26 +102,30 @@ module.exports.login = async (req, res) => {
     }
 }
 
-module.exports.getAllUsers = async (req, res) => {
+// WARNING INI BELUM DI PAGINATION !!
+exports.getAllUsers = async (req, res) => {
     try {
         const users = await AuthModel.find()
-
         res.status(200).json({
             status: 'success',
-            data: users
+            users: users,
         })
     } catch (err) {
-        res.json({
+        res.status(400).json({
             status: 'failed'
         })
-        console.log(err.message);
     }
 }
 
-module.exports.deleteUserByEmail = async (req, res) => {
+exports.deleteUserByEmail = async (req, res) => {
     try {
         const deleteUser = await AuthModel.deleteOne({
             email: req.params.email
+        })
+
+        if (!deleteUser) return res.status(404).json({
+            status: 'failed',
+            message: 'Email tidak ditemukan'
         })
 
         res.status(200).json({

@@ -10,14 +10,17 @@ const authSchema = mongoose.Schema({
     },
     email: {
         type: String,
-        required: [true, 'Email harus diisi!'],
         unique: true,
+        required: [true, 'Email harus diisi!'],
         validate: [isEmail, 'Email tidak valid!']
     },
     password: {
         type: String,
         required: [true, 'Password harus diisi!'],
         minLength: [7, 'Password minimal 7 karakter!']
+    },
+    token: {
+        type: String,
     }
 })
 

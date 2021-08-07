@@ -5,7 +5,7 @@ const authController = require('../controllers/authController')
 const router = express.Router()
 
 router.get('/', (req, res) => {
-    res.send("<h2>Error 404 Page Not Found!!</h2>")
+    res.send("<h2>Server(Backend) Berjalan!</h2>")
 })
 
 // ------- AUTH ---------
@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 router.get('/users', authController.getAllUsers)
 router.post('/signup', authController.signUp)
 router.post('/login', authController.login)
-router.delete('/delete/:email', authController.deleteUserByEmail)
+router.delete('/user/delete/:email', authController.deleteUserByEmail)
 
 // ------- AUTH ---------
 

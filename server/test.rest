@@ -6,26 +6,26 @@
 # Content-Type: application/json
 
 # {
-#     "nama": "owlxx",
-#     "email": "owlxx@gmail.com",
-#     "password": "owlxx123"
+#     "nama": "alwan",
+#     "email": "alw@gmail.com",
+#     "password": "alw"
 # }
 
 # POST http://localhost:4000/login
 # Content-Type: application/json
 
 # {
-#     "email": "owlxx@gmail.com",
-#     "password": "owlxx123"
+#     "email": "alwan@gmail.com",
+#     "password": "alwan123"
 # }
 
-# DELETE http://localhost:4000/delete/wanwan@gmail.com
+# DELETE http://localhost:4000/user/delete/alw@gmail.com
 
 # ---------- AUTH -----------
 
 # ---------- POST -----------
 
-GET http://localhost:4000/posts?page=1
+# GET http://localhost:4000/posts?page=1
 
 # POST http://localhost:4000/posts
 # Content-Type: application/json
@@ -39,16 +39,16 @@ GET http://localhost:4000/posts?page=1
 #     "content": "Halo semuanya kali ini saya akan membagikan belajar fundamental Aos Js"
 # }
 
-PATCH http://localhost:4000/posts/60ebc99cff7a49624f2725f4
-Content-Type: application/json
+# PATCH http://localhost:4000/posts/60ebc99cff7a49624f2725f4
+# Content-Type: application/json
 
-{
-    "penulis": "void",
-    "img": "Laravel.png",
-    "kategori": "Laravel",
-    "judul": "Fundamental Laravel 8",
-    "content": "Halo semuanya kali ini saya akan membagikan belajar fundamental react hook"
-}
+# {
+#     "penulis": "void",
+#     "img": "Laravel.png",
+#     "kategori": "Laravel",
+#     "judul": "Fundamental Laravel 8",
+#     "content": "Halo semuanya kali ini saya akan membagikan belajar fundamental react hook"
+# }
 
 # DELETE http://localhost:4000/posts/6102512d0d958d244a2ac3ee
 
