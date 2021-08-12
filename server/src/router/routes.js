@@ -1,6 +1,7 @@
 const express = require('express')
 const postsController = require('../controllers/postsController')
 const authController = require('../controllers/authController')
+const auth = require('../middleware/auth')
 
 const router = express.Router()
 
@@ -10,10 +11,11 @@ router.get('/', (req, res) => {
 
 // ------- AUTH ---------
 
-router.get('/users', authController.getAllUsers)
 router.post('/signup', authController.signUp)
 router.post('/login', authController.login)
-router.delete('/user/delete/:email', authController.deleteUserByEmail)
+router.get('/users', auth.auth, authController.getAllUsers)
+router.get('/user/:id', authController.getUserById)
+router.delete('/user/delete/:id', authController.deleteUserById)
 
 // ------- AUTH ---------
 

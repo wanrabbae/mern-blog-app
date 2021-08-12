@@ -1,6 +1,7 @@
 const AuthModel = require('../models/Auth')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
 
 // error handling
 const errorHandler = (err) => {
@@ -89,10 +90,16 @@ exports.login = async (req, res) => {
         }
 
         // sampe sini berhasil
+
+        const token = createToken(findUser.email)
+
+        res.header('auth-token', token)
+
         res.status(200).json({
             user: findUser._id,
             status: 'success',
-            message: 'Log in berhasil!'
+            message: 'Log in berhasil!',
+            token: token
         })
 
     } catch (err) {
@@ -106,6 +113,12 @@ exports.login = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await AuthModel.find()
+
+        if (!users) return res.status(404).json({
+            status: 'failed',
+            message: 'Tidak ada data'
+        })
+
         res.status(200).json({
             status: 'success',
             users: users,
@@ -117,16 +130,35 @@ exports.getAllUsers = async (req, res) => {
     }
 }
 
-exports.deleteUserByEmail = async (req, res) => {
+exports.getUserById = async (req, res) => {
     try {
-        const deleteUser = await AuthModel.deleteOne({
-            email: req.params.email
+
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(404).json({
+            status: 'failed',
+            message: 'User tidak ditemukan'
         })
 
-        if (!deleteUser) return res.status(404).json({
-            status: 'failed',
-            message: 'Email tidak ditemukan'
+        const user = await AuthModel.findById(req.params.id)
+
+        res.status(200).json({
+            status: 'success',
+            user: user
         })
+    } catch (err) {
+        res.json({
+            status: 'failed'
+        })
+    }
+}
+
+exports.deleteUserById = async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(404).json({
+            status: 'failed',
+            message: 'User tidak ditemukan'
+        })
+
+        const deleteUser = await AuthModel.findByIdAndDelete(req.params.id)
 
         res.status(200).json({
             status: 'success',

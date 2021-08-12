@@ -136,8 +136,6 @@ module.exports.getPostByKategori = async (req, res) => {
 module.exports.createPost = async (req, res) => {
     const data = req.body
 
-    console.log(req.headers);
-
     await PostsModel.create({
             penulis: data.penulis,
             img: data.img,
