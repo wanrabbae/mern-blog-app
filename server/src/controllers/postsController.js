@@ -39,7 +39,7 @@ module.exports.getAllPost = async (req, res) => {
         .then(result => {
             res.status(200).json({
                 status: "success",
-                blog: result,
+                blogs: result,
                 totalData: parseInt(totalData),
                 page: parseInt(currentPage),
                 perPage: parseInt(perPage)
@@ -76,7 +76,7 @@ module.exports.getAllPostUser = async (req, res) => {
         .then(result => {
             res.status(200).json({
                 status: "success",
-                blog: result,
+                blogs: result,
                 totalData: parseInt(totalData),
                 page: parseInt(currentPage),
                 perPage: parseInt(perPage)
@@ -100,7 +100,7 @@ module.exports.getPostById = async (req, res) => {
             res.status(200).json({
                 status: "success",
                 dataCount: result.length,
-                blog: result
+                blogs: result
             })
         })
         .catch(err => {
@@ -121,7 +121,7 @@ module.exports.getPostByKategori = async (req, res) => {
             res.status(200).json({
                 status: "success",
                 dataCount: result.length,
-                blog: result
+                blogs: result
             })
         })
         .catch(err => {

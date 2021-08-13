@@ -28,7 +28,7 @@ const createToken = (email) => {
     return jwt.sign({
         email
     }, 'testing', {
-        expiresIn: '1h'
+        expiresIn: '3h'
     })
 }
 
@@ -53,7 +53,7 @@ exports.signUp = async (req, res) => {
         res.status(201).json({
             user: user._id,
             status: 'success',
-            message: 'Sign up berhasil!'
+            message: 'Sign up berhasil, silahkan login terlebih dahulu'
         })
     } catch (err) {
         const errors = errorHandler(err)
@@ -113,6 +113,11 @@ exports.login = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await AuthModel.find()
+
+        if (!req.decoded) return res.status(401).json({
+            status: 'failed',
+            message: 'Anda belum login!'
+        })
 
         if (!users) return res.status(404).json({
             status: 'failed',
