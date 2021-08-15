@@ -28,7 +28,7 @@ const createToken = (email) => {
     return jwt.sign({
         email
     }, 'testing', {
-        expiresIn: '3h'
+        expiresIn: '2h'
     })
 }
 
@@ -134,6 +134,8 @@ exports.getAllUsers = async (req, res) => {
         })
     }
 }
+
+// getProfile algoritma = ambil email dari params url -> ambil token di headers (auth-token) -> lalu encode tokenya -> ambil email user dari token -> ambil data user berdasarkan email dari hasil encoded token
 
 exports.getUserById = async (req, res) => {
     try {

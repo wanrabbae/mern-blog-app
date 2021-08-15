@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 // ------- AUTH ---------
 
 router.post('/signup', authController.signUp)
-router.post('/login', authController.login)
+router.post('/signin', authController.login)
 router.get('/users', auth.auth, authController.getAllUsers)
 router.get('/user/:id', auth.auth, authController.getUserById)
 router.delete('/user/delete/:id', auth.auth, authController.deleteUserById)
