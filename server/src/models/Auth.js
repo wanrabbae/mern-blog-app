@@ -4,6 +4,10 @@ const {
 } = require('validator')
 
 const authSchema = mongoose.Schema({
+    picture: {
+        type: String,
+        default: 'https://res.cloudinary.com/touchme/image/upload/v1628760733/userDefault_n8pn0l.png'
+    },
     nama: {
         type: String,
         required: [true, 'Nama harus diisi!']

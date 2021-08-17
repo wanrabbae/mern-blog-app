@@ -27,13 +27,13 @@ const errorHandler = (err) => {
 const createToken = (email) => {
     return jwt.sign({
         email
-    }, 'testing', {
+    }, process.env.JWT_TOKEN_SECRET, {
         expiresIn: '2h'
     })
 }
 
 // sign up
-exports.signUp = async (req, res) => {
+const signUp = async (req, res) => {
     const {
         nama,
         email,
@@ -66,7 +66,7 @@ exports.signUp = async (req, res) => {
 }
 
 // login
-exports.login = async (req, res) => {
+const login = async (req, res) => {
     try {
         const findUser = await AuthModel.findOne({
             email: req.body.email
@@ -110,7 +110,7 @@ exports.login = async (req, res) => {
 }
 
 // WARNING INI BELUM DI PAGINATION !!
-exports.getAllUsers = async (req, res) => {
+const getAllUsers = async (req, res) => {
     try {
         const users = await AuthModel.find()
 
@@ -135,22 +135,27 @@ exports.getAllUsers = async (req, res) => {
     }
 }
 
-// getProfile algoritma = ambil email dari params url -> ambil token di headers (auth-token) -> lalu encode tokenya -> ambil email user dari token -> ambil data user berdasarkan email dari hasil encoded token
+// getProfile algoritma = ambil email dari params url -> ambil token di headers (auth-token) -> lalu decode tokenya -> ambil email user dari token -> ambil data user berdasarkan email dari hasil encoded token
 
-exports.getUserById = async (req, res) => {
+const getProfile = async (req, res) => {
     try {
+        const token = req.header('auth-token')
+        const decodeToken = jwt.decode(token, process.env.JWT_TOKEN_SECRET)
 
-        if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(404).json({
-            status: 'failed',
-            message: 'User tidak ditemukan'
+        const findUser = await AuthModel.findOne({
+            email: decodeToken.email
         })
 
-        const user = await AuthModel.findById(req.params.id)
+        if (!findUser) return res.status(401).json({
+            status: 'failed',
+            message: 'Anda belum login!'
+        })
 
         res.status(200).json({
             status: 'success',
-            user: user
+            user: findUser
         })
+
     } catch (err) {
         res.json({
             status: 'failed'
@@ -158,7 +163,7 @@ exports.getUserById = async (req, res) => {
     }
 }
 
-exports.deleteUserById = async (req, res) => {
+const deleteUserById = async (req, res) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(404).json({
             status: 'failed',
@@ -178,4 +183,12 @@ exports.deleteUserById = async (req, res) => {
         })
         console.log(err.message);
     }
+}
+
+module.exports = {
+    signUp,
+    login,
+    getAllUsers,
+    getProfile,
+    deleteUserById
 }

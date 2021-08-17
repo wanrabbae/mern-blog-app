@@ -12,9 +12,10 @@ exports.auth = (req, res, next) => {
 
     jwt.verify(token, 'testing', (err, decoded) => {
         if (err) {
+            console.log(err);
             return res.status(401).json({
                 success: false,
-                message: 'Token telah expired. silahkan login atau register terlebih dahulu'
+                message: 'Unauthorized. silahkan login atau register terlebih dahulu'
             })
         }
         req.decoded = decoded;
