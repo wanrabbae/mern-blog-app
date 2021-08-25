@@ -23,8 +23,21 @@ const authSchema = mongoose.Schema({
         required: [true, 'Password harus diisi!'],
         minLength: [7, 'Password minimal 7 karakter!']
     },
-    token: {
-        type: String,
+    medsos: {
+        type: [Object],
+        default: [{
+                facebook: 'https://www.facebook.com/'
+            },
+            {
+                instagram: 'https://www.instagram.com/'
+            },
+            {
+                twitter: 'https://www.twitter.com/'
+            },
+            {
+                github: 'https://www.github.com/'
+            },
+        ]
     }
 })
 

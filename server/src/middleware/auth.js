@@ -10,7 +10,7 @@ exports.auth = (req, res, next) => {
         })
     }
 
-    jwt.verify(token, 'testing', (err, decoded) => {
+    jwt.verify(token, process.env.JWT_TOKEN_SECRET, (err, decoded) => {
         if (err) {
             console.log(err);
             return res.status(401).json({
