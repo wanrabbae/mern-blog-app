@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 
 router.post('/signup', authController.signUp)
 router.post('/signin', authController.login)
-router.get('/users', auth.auth, authController.getAllUsers)
+router.get('/users', authController.getAllUsers)
 router.get('/user/getProfile', auth.auth, authController.getProfile)
 router.delete('/user/delete/:id', auth.auth, authController.deleteUserById)
 

@@ -12,7 +12,6 @@ exports.auth = (req, res, next) => {
 
     jwt.verify(token, process.env.JWT_TOKEN_SECRET, (err, decoded) => {
         if (err) {
-            console.log(err);
             return res.status(401).json({
                 success: false,
                 message: 'Unauthorized. silahkan login atau register terlebih dahulu'

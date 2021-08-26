@@ -28,7 +28,7 @@ const createToken = (email) => {
     return jwt.sign({
         email
     }, process.env.JWT_TOKEN_SECRET, {
-        expiresIn: '2h'
+        expiresIn: '10m'
     })
 }
 
@@ -112,11 +112,10 @@ const login = async (req, res) => {
 // WARNING INI BELUM DI PAGINATION !!
 const getAllUsers = async (req, res) => {
     try {
-        const users = await AuthModel.find()
-
-        if (!req.decoded) return res.status(401).json({
-            status: 'failed',
-            message: 'Anda belum login!'
+        const users = await AuthModel.find({}, {
+            _id: 0,
+            __v: 0,
+            password: 0
         })
 
         if (!users) return res.status(404).json({

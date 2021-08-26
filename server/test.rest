@@ -1,23 +1,23 @@
 # ---------- AUTH -----------
-GET http://localhost:4000/users
-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFsd2FuQGdtYWlsLmNvbSIsImlhdCI6MTYyOTg2NTM2NSwiZXhwIjoxNjI5ODcyNTY1fQ.SQEU-l6QR0raNXhNIP1ghbpjTnm687sWdeBl4wX9maw
+# GET http://localhost:4000/user/getProfile
+# auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im93bHh4QGdtYWlsLmNvbSIsImlhdCI6MTYyOTk0NjI3OCwiZXhwIjoxNjI5OTQ2ODc4fQ._ptrJdeO39yi84jwoOa2A-ua3GZIS_0KsUbe1OS12hw
 
-# POST http://localhost:4000/signup
-# Content-Type: application/json
+POST http://localhost:4000/signup
+Content-Type: application/json
 
-# {
-#     "nama": "alwan",
-#     "email": "alwan@gmail.com",
-#     "password": "lolipop123"
-# }
+{
+    "nama": "luiji",
+    "email": "luiji@gmail.com",
+    "password": "abcd1234"
+}
 
-# POST http://localhost:4000/signin
-# Content-Type: application/json
+POST http://localhost:4000/signin
+Content-Type: application/json
 
-# {
-#     "email": "owlxx@gmail.com",
-#     "password": "owlxx123"
-# }
+{
+    "email": "owlxx@gmail.com",
+    "password": "owlxx123"
+}
 
 # DELETE http://localhost:4000/user/delete/610e174acc62717d51db57f7
 # auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im93bHh4QGdtYWlsLmNvbSIsImlhdCI6MTYyOTg2NjA0OCwiZXhwIjoxNjI5ODczMjQ4fQ.kTB6kDKG0mrMiGhrwSA5Xbuh8IY_lkp0W9SdzFRb59o
