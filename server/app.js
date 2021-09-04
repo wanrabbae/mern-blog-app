@@ -19,4 +19,4 @@ app.use(routes)
 
 app.listen(port, () => console.log(`Server run in http://localhost:${port}`))
 
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFsd2FuQGdtYWlsLmNvbSIsImlhdCI6MTYyOTg2NTM2NSwiZXhwIjoxNjI5ODcyNTY1fQ.SQEU-l6QR0raNXhNIP1ghbpjTnm687sWdeBl4wX9maw
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im93bHh4QGdtYWlsLmNvbSIsImlhdCI6MTYzMDcyNDc2NiwiZXhwIjoxNjMwNzI3NzY2fQ.CNRgi2lm2YSX51Qnxnrsk3Ka8aocaDygOfjwg6gs1Ks

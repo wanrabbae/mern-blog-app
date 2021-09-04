@@ -34,6 +34,9 @@ module.exports.getAllPost = async (req, res) => {
             return PostsModel.find()
                 .skip((parseInt(currentPage) - 1) * parseInt(perPage))
                 .limit(parseInt(perPage))
+                .sort({
+                    _id: -1
+                })
         })
 
         .then(result => {
@@ -116,6 +119,9 @@ module.exports.getPostById = async (req, res) => {
 module.exports.getPostByKategori = async (req, res) => {
     await PostsModel.find({
             kategori: req.params.kategori.toLowerCase()
+        })
+        .sort({
+            _id: -1
         })
         .then(result => {
             res.status(200).json({

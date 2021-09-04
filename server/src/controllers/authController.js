@@ -28,7 +28,7 @@ const createToken = (email) => {
     return jwt.sign({
         email
     }, process.env.JWT_TOKEN_SECRET, {
-        expiresIn: '10m'
+        expiresIn: '50m'
     })
 }
 
@@ -116,6 +116,8 @@ const getAllUsers = async (req, res) => {
             _id: 0,
             __v: 0,
             password: 0
+        }).sort({
+            nama: 1
         })
 
         if (!users) return res.status(404).json({
