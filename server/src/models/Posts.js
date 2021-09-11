@@ -5,8 +5,10 @@ const postSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    img: {
-        type: String,
+    cover: {
+        type: {
+            String
+        },
         required: [true, 'Gambar harus di upload!']
     },
     kategori: {
@@ -20,7 +22,6 @@ const postSchema = mongoose.Schema({
     content: {
         type: String,
         required: [true, 'Content harus diisi!'],
-        maxLength: [30000, 'Content maximal hanya 30000 karakter']
     },
     created_at: {
         type: String,

@@ -1,4 +1,8 @@
 const PostsModel = require('../models/Posts')
+const {
+    cloudinary
+} = require('../../config/cloudinary')
+const fs = require('fs')
 
 // errors handling
 const handleErrors = (err) => {
@@ -21,7 +25,7 @@ const handleErrors = (err) => {
 }
 
 // mengambil semua post
-module.exports.getAllPost = async (req, res) => {
+const getAllPost = async (req, res) => {
     const currentPage = req.query.page || 1
     const perPage = req.query.perPage || 5
     let totalData
@@ -57,7 +61,7 @@ module.exports.getAllPost = async (req, res) => {
 }
 
 // mengambil semua post berdasarkan user
-module.exports.getAllPostUser = async (req, res) => {
+const getAllPostUser = async (req, res) => {
     const currentPage = req.query.page || 1
     const perPage = req.query.perPage || 5
     let totalData
@@ -95,7 +99,7 @@ module.exports.getAllPostUser = async (req, res) => {
 }
 
 // mengambil post berdasarkan id
-module.exports.getPostById = async (req, res) => {
+const getPostById = async (req, res) => {
     await PostsModel.findOne({
             _id: req.params.id
         })
@@ -116,7 +120,7 @@ module.exports.getPostById = async (req, res) => {
 
 // mengambil post berdasarkan kategori
 // WARNING!! INI BELUM DI PAGINATION KARENA KATEGORI MSH SEDIKIT
-module.exports.getPostByKategori = async (req, res) => {
+const getPostByKategori = async (req, res) => {
     await PostsModel.find({
             kategori: req.params.kategori.toLowerCase()
         })
@@ -139,36 +143,46 @@ module.exports.getPostByKategori = async (req, res) => {
 }
 
 // membuat post
-module.exports.createPost = async (req, res) => {
+const createPost = async (req, res) => {
     const data = req.body
 
-    await PostsModel.create({
-            penulis: data.penulis,
-            img: data.img,
-            kategori: data.kategori.toLowerCase(),
-            judul: data.judul,
-            content: data.content,
-            created_at: new Date().toDateString(),
-            updated_at: new Date().toDateString()
-        })
-        .then(result => {
-            res.status(201).json({
-                status: "success",
-                message: "Berhasil membuat Post!",
-                id: result._id
+    await cloudinary.uploader.upload(req.file.path, (err, result) => {
+        if (err) console.log(err)
+
+        PostsModel.create({
+                penulis: data.penulis,
+                cover: {
+                    url: result.secure_url,
+                    public_id: result.public_id
+                },
+                kategori: data.kategori.toLowerCase(),
+                judul: data.judul,
+                content: data.content,
+                created_at: new Date().toDateString(),
+                updated_at: new Date().toDateString()
             })
-        })
-        .catch(err => {
-            const errors = handleErrors(err)
-            res.status(400).json({
-                status: "failed",
-                error: errors
+            .then(result => {
+                res.status(201).json({
+                    status: "success",
+                    message: "Berhasil membuat Post!",
+                    id: result._id
+                })
             })
-        })
+            .catch(err => {
+                const errors = handleErrors(err)
+                res.status(400).json({
+                    status: "failed",
+                    error: errors
+                })
+            })
+
+        fs.unlinkSync(req.file.path)
+    })
+
 }
 
 // update post
-module.exports.updatePost = async (req, res) => {
+const updatePost = async (req, res) => {
     const id = req.params.id
 
     await PostsModel.findByIdAndUpdate(id, {
@@ -201,7 +215,7 @@ module.exports.updatePost = async (req, res) => {
 }
 
 // menghapus post
-module.exports.deletePost = async (req, res) => {
+const deletePost = async (req, res) => {
     const id = req.params.id
 
     await PostsModel.findByIdAndDelete(id)
@@ -224,4 +238,15 @@ module.exports.deletePost = async (req, res) => {
                 message: err.message
             })
         })
+}
+
+module.exports = {
+    getAllPost,
+    getAllPostUser,
+    getPostById,
+    getPostById,
+    getPostByKategori,
+    createPost,
+    updatePost,
+    deletePost
 }

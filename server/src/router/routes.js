@@ -1,4 +1,8 @@
 const express = require('express')
+const multer = require('multer')
+const upload = multer({
+    dest: 'asset/'
+})
 const postsController = require('../controllers/postsController')
 const authController = require('../controllers/authController')
 const auth = require('../middleware/auth')
@@ -24,7 +28,7 @@ router.get('/posts', postsController.getAllPost)
 router.get('/posts/user/:user', auth.auth, postsController.getAllPostUser)
 router.get('/post/:id', postsController.getPostById)
 router.get('/posts/:kategori', postsController.getPostByKategori)
-router.post('/posts', auth.auth, postsController.createPost)
+router.post('/posts', auth.auth, upload.single('cover'), postsController.createPost)
 router.put('/posts/:id', auth.auth, postsController.updatePost)
 router.delete('/post/:id', auth.auth, postsController.deletePost)
 // ------- POST ---------
