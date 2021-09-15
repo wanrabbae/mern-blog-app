@@ -29,7 +29,7 @@ router.get('/posts/user/:user', auth.auth, postsController.getAllPostUser)
 router.get('/post/:id', postsController.getPostById)
 router.get('/posts/:kategori', postsController.getPostByKategori)
 router.post('/posts', auth.auth, upload.single('cover'), postsController.createPost)
-router.put('/posts/:id', auth.auth, postsController.updatePost)
+router.put('/posts/:id', auth.auth, upload.single('cover'), postsController.updatePost)
 router.delete('/post/:id', auth.auth, postsController.deletePost)
 // ------- POST ---------
 

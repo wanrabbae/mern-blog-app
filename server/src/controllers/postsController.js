@@ -78,6 +78,9 @@ const getAllPostUser = async (req, res) => {
                 })
                 .skip((parseInt(currentPage) - 1) * parseInt(perPage))
                 .limit(parseInt(perPage))
+                .sort({
+                    _id: -1
+                })
         })
 
         .then(result => {
@@ -182,36 +185,58 @@ const createPost = async (req, res) => {
 }
 
 // update post
+// cara update disini yaitu dengan mengahapus cover lama dan menambahkan cover baru
 const updatePost = async (req, res) => {
     const id = req.params.id
+    const data = req.body
 
-    await PostsModel.findByIdAndUpdate(id, {
-            penulis: req.body.penulis,
-            img: req.body.img,
-            kategori: req.body.kategori.toLowerCase(),
-            judul: req.body.judul,
-            content: req.body.content,
-            updated_at: new Date().toDateString(),
+    const findPost = await PostsModel.findById(id)
+
+    if (!findPost) {
+        res.status(404).json({
+            status: 'failed',
+            message: 'Post tidak ditemukan!'
         })
-        .then((result) => {
-            if (!result) {
-                res.status(404).json({
-                    status: 'failed',
-                    message: 'Post tidak ditemukan!'
+    }
+    // hapus cover lama
+    cloudinary.uploader.destroy(findPost.cover.public_id)
+
+    // upload cover baru dan update data
+    await cloudinary.uploader.upload(req.file.path, (err, result) => {
+        if (err) console.log(err)
+
+        PostsModel.updateOne({
+                _id: id
+            }, {
+                $set: {
+                    penulis: data.penulis,
+                    cover: {
+                        url: result.secure_url,
+                        public_id: result.public_id
+                    },
+                    kategori: data.kategori.toLowerCase(),
+                    judul: data.judul,
+                    content: data.content,
+                    updated_at: new Date().toDateString()
+                }
+            })
+            .then(result => {
+                res.status(200).json({
+                    status: "success",
+                    message: "Berhasil mengubah Post!"
                 })
-            }
+            })
+            .catch(err => {
+                const errors = handleErrors(err)
+                res.status(400).json({
+                    status: "failed",
+                    error: errors
+                })
+            })
 
-            res.status(200).json({
-                status: 'success',
-                message: 'Update post berhasil!'
-            })
-        })
-        .catch((err) => {
-            res.json({
-                status: 'failed',
-                message: err.message
-            })
-        })
+        fs.unlinkSync(req.file.path)
+    })
+
 }
 
 // menghapus post
@@ -220,6 +245,9 @@ const deletePost = async (req, res) => {
 
     await PostsModel.findByIdAndDelete(id)
         .then((result) => {
+            // hapus cover pada cloudinary
+            cloudinary.uploader.destroy(result.cover.public_id)
+
             if (!result) {
                 res.status(404).json({
                     status: 'failed',
