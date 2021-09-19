@@ -4,9 +4,14 @@ const {
 } = require('validator')
 
 const authSchema = mongoose.Schema({
-    picture: {
-        type: String,
-        default: 'https://res.cloudinary.com/touchme/image/upload/v1628760733/userDefault_n8pn0l.png'
+    avatar: {
+        type: {
+            String
+        },
+        default: {
+            url: 'https://res.cloudinary.com/touchme/image/upload/v1628760733/userDefault_n8pn0l.png',
+            public_id: 'userDefault_n8pn0l'
+        }
     },
     nama: {
         type: String,
@@ -25,19 +30,6 @@ const authSchema = mongoose.Schema({
     },
     medsos: {
         type: [Object],
-        default: [{
-                facebook: 'https://www.facebook.com/'
-            },
-            {
-                instagram: 'https://www.instagram.com/'
-            },
-            {
-                twitter: 'https://www.twitter.com/'
-            },
-            {
-                github: 'https://www.github.com/'
-            },
-        ]
     }
 })
 

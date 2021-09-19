@@ -4,7 +4,7 @@ const upload = multer({
     dest: 'asset/'
 })
 const postsController = require('../controllers/postsController')
-const authController = require('../controllers/authController')
+const userController = require('../controllers/userController')
 const auth = require('../middleware/auth')
 
 const router = express.Router()
@@ -15,11 +15,12 @@ router.get('/', (req, res) => {
 
 // ------- AUTH ---------
 
-router.post('/signup', authController.signUp)
-router.post('/signin', authController.login)
-router.get('/users', authController.getAllUsers)
-router.get('/user/getProfile', auth.auth, authController.getProfile)
-router.delete('/user/delete/:id', auth.auth, authController.deleteUserById)
+router.post('/signup', userController.signUp)
+router.post('/signin', userController.login)
+router.get('/users', userController.getAllUsers)
+router.get('/user/getProfile', auth.auth, userController.getProfile)
+router.put('/user/:email', upload.single('picture'), auth.auth, userController.updateProfile)
+router.delete('/user/deleteProfile', auth.auth, userController.deleteProfile)
 
 // ------- AUTH ---------
 

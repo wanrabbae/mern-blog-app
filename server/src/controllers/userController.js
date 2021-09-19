@@ -2,6 +2,9 @@ const AuthModel = require('../models/Auth')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
+const {
+    cloudinary
+} = require('../../config/cloudinary')
 
 // error handling
 const errorHandler = (err) => {
@@ -24,9 +27,9 @@ const errorHandler = (err) => {
     return errors
 }
 
-const createToken = (email) => {
+const createToken = (id) => {
     return jwt.sign({
-        email
+        id
     }, process.env.JWT_TOKEN_SECRET, {
         expiresIn: '50m'
     })
@@ -48,18 +51,31 @@ const signUp = async (req, res) => {
             nama: nama,
             email: email,
             password: hashedPassword,
+            medsos: [{
+                    facebook: 'https://www.facebook.com/'
+                },
+                {
+                    instagram: 'https://www.instagram.com/'
+                },
+                {
+                    twitter: 'https://www.twitter.com/'
+                },
+                {
+                    github: 'https://www.github.com/'
+                },
+            ]
         })
 
         res.status(201).json({
             user: user._id,
             status: 'success',
-            message: 'Sign up berhasil, silahkan login terlebih dahulu'
+            message: 'Berhasil Sign Up, silahkan login terlebih dahulu'
         })
     } catch (err) {
         const errors = errorHandler(err)
         res.status(400).json({
             status: 'failed',
-            err: errors
+            errors: errors
 
         })
     }
@@ -91,20 +107,21 @@ const login = async (req, res) => {
 
         // sampe sini berhasil
 
-        const token = createToken(findUser.email)
+        const token = createToken(findUser._id)
 
         res.header('auth-token', token)
 
         res.status(200).json({
             user: findUser._id,
             status: 'success',
-            message: 'Log in berhasil!',
+            message: 'Berhasil Sign In!',
             token: token
         })
 
     } catch (err) {
         res.json({
-            status: 'failed'
+            status: 'failed',
+            message: 'something went wrong :('
         })
     }
 }
@@ -144,7 +161,7 @@ const getProfile = async (req, res) => {
         const decodeToken = jwt.decode(token, process.env.JWT_TOKEN_SECRET)
 
         const findUser = await AuthModel.findOne({
-            email: decodeToken.email
+            _id: decodeToken.id
         })
 
         if (!findUser) return res.status(401).json({
@@ -155,6 +172,33 @@ const getProfile = async (req, res) => {
         res.status(200).json({
             status: 'success',
             user: findUser
+        })
+
+    } catch (err) {
+        res.json({
+            status: 'failed',
+            message: 'something went wrong :('
+        })
+    }
+}
+
+const deleteProfile = async (req, res) => {
+    try {
+        const token = req.header('auth-token')
+        const decodeToken = jwt.decode(token, process.env.JWT_TOKEN_SECRET)
+
+        if (!token) return res.status(401).json({
+            status: 'failed',
+            message: 'Unauthorized!'
+        })
+
+        await AuthModel.deleteOne({
+            _id: decodeToken.id
+        })
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Hapus akun berhasil!'
         })
 
     } catch (err) {
@@ -182,7 +226,74 @@ const deleteUserById = async (req, res) => {
         res.json({
             status: 'failed'
         })
-        console.log(err.message);
+    }
+}
+
+const updateProfile = async (req, res) => {
+    const {
+        nama,
+        email,
+        password,
+        facebook,
+        instagram,
+        twitter,
+        github
+    } = req.body
+
+    try {
+        const findUser = await AuthModel.findOne({
+            email: req.params.email
+        })
+
+        if (!findUser) return res.status(404).json({
+            status: 'failed',
+            message: 'User tidak ditemukan!'
+        })
+
+        const deleteAvatar = await cloudinary.uploader.destroy(findUser.avatar.public_id)
+
+        const uploadAvatar = await cloudinary.uploader.upload(req.file.path)
+
+        // hash password
+        const hashedPassword = await bcrypt.hash(password, 10)
+
+        await AuthModel.updateOne({
+            email: req.params.email
+        }, {
+            avatar: {
+                url: uploadAvatar.secure_url,
+                public_id: uploadAvatar.public_id
+            },
+            medsos: [{
+                    facebook: `https://www.facebook.com/${facebook}`
+                },
+                {
+                    instagram: `https://www.instagram.com/${instagram}`
+                },
+                {
+                    twitter: `https://www.twitter.com/${twitter}`
+                },
+                {
+                    github: `https://www.github.com/${github}`
+                },
+            ],
+            nama: nama,
+            email: email,
+            password: hashedPassword,
+        })
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Berhasil mengubah profile!'
+        })
+
+    } catch (err) {
+        const errors = errorHandler(err)
+        res.status(400).json({
+            status: 'failed',
+            errors: errors
+
+        })
     }
 }
 
@@ -191,5 +302,7 @@ module.exports = {
     login,
     getAllUsers,
     getProfile,
-    deleteUserById
+    deleteUserById,
+    deleteProfile,
+    updateProfile
 }
