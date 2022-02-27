@@ -1,36 +1,34 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const postSchema = mongoose.Schema({
-    penulis: {
-        type: String,
-        required: true
+const postSchema = mongoose.Schema(
+  {
+    author_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     cover: {
-        type: {
-            String
-        },
-        required: [true, 'Gambar harus di upload!']
+      type: {
+        String,
+      },
+      required: [true, "Gambar harus di upload!"],
     },
-    kategori: {
-        type: String,
-        required: [true, 'Masukan kategori!']
+    category: {
+      type: String,
+      required: [true, "Masukan kategori!"],
     },
-    judul: {
-        type: String,
-        required: [true, 'Judul harus diisi!']
+    title: {
+      type: String,
+      required: [true, "Judul harus diisi!"],
     },
     content: {
-        type: String,
-        required: [true, 'Content harus diisi!'],
+      type: String,
+      required: [true, "Content harus diisi!"],
     },
-    created_at: {
-        type: String,
-    },
-    updated_at: {
-        type: String,
-    }
-})
+  },
+  { timestamps: true }
+);
 
-const Post = mongoose.model('posts', postSchema)
+const Post = mongoose.model("posts", postSchema);
 
-module.exports = Post
+module.exports = Post;
