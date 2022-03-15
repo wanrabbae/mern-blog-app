@@ -13,7 +13,6 @@ const errorHandler = (err) => {
   };
 
   if (err.code == 11000) {
-    errors.name = "Nama sudah terdaftar";
     errors.email = "Email sudah terdaftar!";
   } else if (err.message.includes("auth validation failed")) {
     Object.values(err.errors).forEach(({ properties }) => {
@@ -39,12 +38,12 @@ const createToken = (id) => {
 // sign up
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
-  console.log(req.body);
+
   try {
     // hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await UserModel.create({
+    const user = await UserModel.insertMany({
       name: name,
       email: email,
       password: hashedPassword,
@@ -64,10 +63,14 @@ const signUp = async (req, res) => {
       ],
     });
 
+    const token = createToken(user[0]._id);
+
     res.status(201).json({
       user: user._id,
       status: "success",
       message: "Berhasil Sign Up, silahkan login terlebih dahulu",
+      token: token,
+      data: user,
     });
   } catch (err) {
     const errors = errorHandler(err);
@@ -107,7 +110,7 @@ const login = async (req, res) => {
 
     const token = createToken(findUser._id);
 
-    res.header("Authorization", token);
+    // res.header("Authorization", token);
 
     res.status(200).json({
       user: findUser._id,
@@ -156,12 +159,9 @@ const getAllUsers = async (req, res) => {
 
 const getProfile = async (req, res) => {
   try {
-    const token = req.header("Authorization");
-    const decodeToken = jwt.decode(token, process.env.JWT_TOKEN_SECRET);
+    const idUser = req.decoded.id;
 
-    const findUser = await UserModel.findOne({
-      _id: decodeToken.id,
-    });
+    const findUser = await UserModel.findById(idUser).populate("post");
 
     if (!findUser)
       return res.status(401).json({
@@ -174,6 +174,7 @@ const getProfile = async (req, res) => {
       user: findUser,
     });
   } catch (err) {
+    console.log(err);
     res.json({
       status: "failed",
       message: "something went wrong :(",

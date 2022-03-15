@@ -16,6 +16,15 @@ const userSchema = mongoose.Schema({
     required: [true, "Nama harus diisi!"],
     unique: [true, "Nama sudah digunakan!"],
   },
+  level: {
+    type: String,
+    enum: ["admin", "user"],
+    default: "user",
+  },
+  bio: {
+    type: String,
+    default: "",
+  },
   email: {
     type: String,
     unique: true,
@@ -24,14 +33,18 @@ const userSchema = mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, "Password harus diisi!"],
-    minLength: [7, "Password minimal 7 karakter!"],
   },
   social: {
     type: [Object],
   },
+  post: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+    },
+  ],
 });
 
-const User = mongoose.model("user", userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

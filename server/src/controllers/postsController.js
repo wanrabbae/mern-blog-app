@@ -1,13 +1,15 @@
 const PostsModel = require("../models/Posts");
+const UserModel = require("../models/User");
+const CategoryModel = require("../models/Category");
 const { cloudinary } = require("../../config/cloudinary");
 const fs = require("fs");
 
 // errors handling
 const handleErrors = (err) => {
   let errors = {
-    img: "",
-    kategori: "",
-    judul: "",
+    cover: "",
+    category: "",
+    title: "",
     content: "",
   };
 
@@ -32,11 +34,13 @@ const getAllPost = async (req, res) => {
     .then((count) => {
       totalData = count;
       return PostsModel.find()
+        .select("-content")
         .skip((parseInt(currentPage) - 1) * parseInt(perPage))
         .limit(parseInt(perPage))
         .sort({
           _id: -1,
-        });
+        })
+        .populate("user", "name");
     })
 
     .then((result) => {
@@ -63,7 +67,7 @@ const getAllPostUser = async (req, res) => {
   let totalData;
 
   await PostsModel.find({})
-    .populate("author_id")
+    .populate("user", "name")
     .countDocuments()
 
     .then((count) => {
@@ -118,16 +122,16 @@ const getPostById = async (req, res) => {
 // mengambil post berdasarkan kategori
 // WARNING!! INI BELUM DI PAGINATION KARENA KATEGORI MSH SEDIKIT
 const getPostByKategori = async (req, res) => {
-  await PostsModel.find({
-    category: req.params.kategori.toLowerCase(),
+  await CategoryModel.find({
+    name: req.params.kategori.toLowerCase(),
   })
+    .populate("posts")
     .sort({
       _id: -1,
     })
     .then((result) => {
       res.status(200).json({
         status: "success",
-        dataCount: result.length,
         blogs: result,
       });
     })
@@ -148,7 +152,7 @@ const createPost = async (req, res) => {
     if (err) console.log(err);
 
     PostsModel.create({
-      author_id: idUser,
+      user: idUser,
       cover: {
         url: result.secure_url,
         public_id: result.public_id,
@@ -157,7 +161,18 @@ const createPost = async (req, res) => {
       title: data.title,
       content: data.content,
     })
-      .then((result) => {
+      .then(async (result) => {
+        // push post id to user collection post array
+        const userById = await UserModel.findById(idUser);
+        userById.post.push(result._id);
+        await userById.save();
+
+        const categoryById = await CategoryModel.findOne({
+          name: data.category.toLowerCase(),
+        });
+        categoryById.posts.push(result._id);
+        await categoryById.save();
+
         res.status(201).json({
           status: "success",
           message: "Berhasil membuat Post!",
@@ -165,6 +180,7 @@ const createPost = async (req, res) => {
         });
       })
       .catch((err) => {
+        console.log(err);
         const errors = handleErrors(err);
         res.status(400).json({
           status: "failed",
@@ -233,9 +249,10 @@ const updatePost = async (req, res) => {
 // menghapus post
 const deletePost = async (req, res) => {
   const id = req.params.id;
+  const idUser = req.decoded.id;
 
   await PostsModel.findByIdAndDelete(id)
-    .then((result) => {
+    .then(async (result) => {
       // hapus cover pada cloudinary
       cloudinary.uploader.destroy(result.cover.public_id);
 
@@ -262,7 +279,6 @@ const deletePost = async (req, res) => {
 module.exports = {
   getAllPost,
   getAllPostUser,
-  getPostById,
   getPostById,
   getPostByKategori,
   createPost,

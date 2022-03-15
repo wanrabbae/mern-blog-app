@@ -5,6 +5,7 @@ const upload = multer({
 });
 const postsController = require("../controllers/postsController");
 const userController = require("../controllers/userController");
+const categoryController = require("../controllers/categoryController");
 const auth = require("../middleware/auth");
 
 const router = express.Router();
@@ -48,5 +49,15 @@ router.put(
 );
 router.delete("/post/:id", auth.auth, postsController.deletePost);
 // ------- POST ---------
+
+// ------- CATEGORY ---------
+router.get("/categories", categoryController.getCategory);
+router.post("/categories", auth.isAdmin, categoryController.createCategory);
+router.delete(
+  "/categories/:id",
+  auth.isAdmin,
+  categoryController.deleteCategory
+);
+// ------- CATEGORY ---------
 
 module.exports = router;
