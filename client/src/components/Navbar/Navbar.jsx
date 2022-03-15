@@ -39,7 +39,7 @@ function Navbar() {
             <span className="sr-only">Open user menu</span>
             <img
               className="w-8 h-8 rounded-full"
-              src="/docs/images/people/profile-picture-3.jpg"
+              src="https://res.cloudinary.com/touchme/image/upload/v1645760875/df2t8ed9kfbo04ibcpwy.png"
               alt="user photo"
             />
           </button>

@@ -1,10 +1,17 @@
-import { Navbar } from "./components/";
+import { Navbar, Footer } from "./components/";
+import { MainPage } from "./pages/index";
+import { Switch, Route, BrowserRouter } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
       <Navbar />
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/" component={MainPage} />
+        </Switch>
+      </BrowserRouter>
+      <Footer />
     </div>
   );
 }
