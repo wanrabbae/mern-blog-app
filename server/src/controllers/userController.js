@@ -1,4 +1,5 @@
 const UserModel = require("../models/User");
+const PostsModel = require("../models/Posts");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
@@ -23,14 +24,16 @@ const errorHandler = (err) => {
   return errors;
 };
 
-const createToken = (id) => {
+const createToken = (user) => {
   return jwt.sign(
     {
-      id,
+      id: user._id,
+      level: user.level,
+      name: user.name,
     },
     process.env.JWT_TOKEN_SECRET,
     {
-      expiresIn: "1d",
+      expiresIn: "30d",
     }
   );
 };
@@ -63,7 +66,7 @@ const signUp = async (req, res) => {
       ],
     });
 
-    const token = createToken(user[0]._id);
+    const token = createToken(user[0]);
 
     res.status(201).json({
       user: user._id,
@@ -106,11 +109,7 @@ const login = async (req, res) => {
       });
     }
 
-    // sampe sini berhasil
-
-    const token = createToken(findUser._id);
-
-    // res.header("Authorization", token);
+    const token = createToken(findUser);
 
     res.status(200).json({
       user: findUser._id,
@@ -210,6 +209,10 @@ const deleteUserById = async (req, res) => {
       });
 
     const deleteUser = await UserModel.findByIdAndDelete(req.params.id);
+
+    await PostsModel.deleteMany({
+      user: req.params.id,
+    });
 
     res.status(200).json({
       status: "success",

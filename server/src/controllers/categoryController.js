@@ -3,7 +3,7 @@ const CategoryModel = require("../models/Category");
 const createCategory = async (req, res) => {
   const { name } = req.body;
   const category = new CategoryModel({
-    name,
+    name: name.toLowerCase(),
   });
   await category.save();
   res.status(200).json({

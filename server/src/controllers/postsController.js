@@ -33,14 +33,16 @@ const getAllPost = async (req, res) => {
 
     .then((count) => {
       totalData = count;
-      return PostsModel.find()
-        .select("-content")
-        .skip((parseInt(currentPage) - 1) * parseInt(perPage))
-        .limit(parseInt(perPage))
-        .sort({
-          _id: -1,
-        })
-        .populate("user", "name");
+      return (
+        PostsModel.find()
+          // .select("-content")
+          .skip((parseInt(currentPage) - 1) * parseInt(perPage))
+          .limit(parseInt(perPage))
+          .sort({
+            _id: -1,
+          })
+          .populate("user", "name")
+      );
     })
 
     .then((result) => {
@@ -104,6 +106,7 @@ const getPostById = async (req, res) => {
   await PostsModel.findOne({
     _id: req.params.id,
   })
+    .populate("user", "name")
     .then((result) => {
       res.status(200).json({
         status: "success",
@@ -120,19 +123,37 @@ const getPostById = async (req, res) => {
 };
 
 // mengambil post berdasarkan kategori
-// WARNING!! INI BELUM DI PAGINATION KARENA KATEGORI MSH SEDIKIT
 const getPostByKategori = async (req, res) => {
+  const currentPage = req.query.page || 1;
+  const perPage = req.query.perPage || 5;
+  let totalData;
+
   await CategoryModel.find({
     name: req.params.kategori.toLowerCase(),
   })
-    .populate("posts")
-    .sort({
-      _id: -1,
+    .countDocuments()
+    .then((count) => {
+      totalData = count;
+      return (
+        CategoryModel.find({
+          name: req.params.kategori.toLowerCase(),
+        })
+          // .select("-content")
+          .skip((parseInt(currentPage) - 1) * parseInt(perPage))
+          .limit(parseInt(perPage))
+          .sort({
+            _id: -1,
+          })
+          .populate("posts")
+      );
     })
     .then((result) => {
       res.status(200).json({
         status: "success",
         blogs: result,
+        totalData: parseInt(totalData),
+        page: parseInt(currentPage),
+        perPage: parseInt(perPage),
       });
     })
     .catch((err) => {
@@ -249,7 +270,6 @@ const updatePost = async (req, res) => {
 // menghapus post
 const deletePost = async (req, res) => {
   const id = req.params.id;
-  const idUser = req.decoded.id;
 
   await PostsModel.findByIdAndDelete(id)
     .then(async (result) => {
