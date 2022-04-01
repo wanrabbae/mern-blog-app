@@ -1,16 +1,13 @@
 import { Navbar, Footer } from "./components/";
-import { MainPage } from "./pages/index";
-import { Switch, Route, BrowserRouter } from "react-router-dom";
+import { MainPage, PostsCategory } from "./pages/index";
+// import { Route, BrowserRouter, Switch } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App flex flex-col h-screen justify-between dark:bg-gray-800">
       <Navbar />
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/" component={MainPage} />
-        </Switch>
-      </BrowserRouter>
+      <MainPage />
+      {/* <PostsCategory /> */}
       <Footer />
     </div>
   );
