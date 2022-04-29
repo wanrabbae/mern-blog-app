@@ -1,2 +1,4 @@
-export { default as MainPage } from "./MainPage/MainPage";
-export { default as PostsCategory } from "./PostsCategory/index";
+export { default as Home } from "./Home/Home";
+export { default as Posts } from "./Posts/index";
+export { default as PostsWithCategory } from "./Posts/category";
+export { default as Sign } from "./Auth/Sign";

@@ -43,6 +43,10 @@ const userSchema = mongoose.Schema({
       ref: "Post",
     },
   ],
+  isActive: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const User = mongoose.model("User", userSchema);

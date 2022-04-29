@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const { cloudinary } = require("../../config/cloudinary");
+const transporter = require("../utils/nodemailer");
 
 // error handling
 const errorHandler = (err) => {
@@ -66,14 +67,41 @@ const signUp = async (req, res) => {
       ],
     });
 
-    const token = createToken(user[0]);
+    const tokenActivation = jwt.sign(
+      {
+        id: user[0]._id,
+      },
+      process.env.JWT_ACTIVATION_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
 
-    res.status(201).json({
-      user: user._id,
+    let mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: user[0].email,
+      subject: `Account activation link (IndoCoders)`,
+      html: `
+      <h1>Please use the following to activate your account</h1>
+      <a href="${process.env.CLIENT_URL}/user/activate/${tokenActivation}" target="_blank">ACTIVATE YOUR ACCOUNT HERE</a>
+      <hr />
+      <p>This email may containe sensetive information</p>
+      <p>${process.env.CLIENT_URL}</p>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.log(err);
+        console.log("Sent email error!!");
+      } else {
+        console.log("Email sent!");
+      }
+    });
+
+    res.status(200).json({
       status: "success",
-      message: "Berhasil Sign Up, silahkan login terlebih dahulu",
-      token: token,
-      data: user,
+      message: `Email has been sent to ${user[0].email}`,
     });
   } catch (err) {
     const errors = errorHandler(err);
@@ -99,6 +127,13 @@ const login = async (req, res) => {
       });
     }
 
+    if (findUser.isActive === false) {
+      res.status(402).json({
+        status: "failed",
+        message: "Your account is not activated yet!",
+      });
+    }
+
     // check password
     const auth = await bcrypt.compare(req.body.password, findUser.password);
 
@@ -119,6 +154,51 @@ const login = async (req, res) => {
     });
   } catch (err) {
     res.json({
+      status: "failed",
+      message: "something went wrong :(",
+    });
+  }
+};
+
+// account activation controller
+const activationController = async (req, res) => {
+  const { token } = req.body;
+
+  try {
+    jwt.verify(
+      token,
+      process.env.JWT_ACTIVATION_SECRET,
+      async (err, decoded) => {
+        if (err) {
+          return res.status(400).json({
+            status: "failed",
+            message: "Link expired!",
+          });
+        }
+
+        const user = await UserModel.findOne({
+          _id: decoded.id,
+        });
+
+        if (!user) {
+          return res.status(400).json({
+            status: "failed",
+            message: "User not found!",
+          });
+        }
+
+        user.isActive = true;
+        await user.save();
+
+        res.status(200).json({
+          status: "success",
+          message: "Your account has been activated!",
+        });
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
       status: "failed",
       message: "something went wrong :(",
     });
@@ -301,4 +381,5 @@ module.exports = {
   deleteUserById,
   deleteProfile,
   updateProfile,
+  activationController,
 };

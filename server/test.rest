@@ -6,9 +6,9 @@
 # Content-Type: application/json
 
 # {
-#     "name": "alwan",
-#     "email": "alwan@gmail.com",
-#     "password": "abcd1234"
+#     "name": "wancode",
+#     "email": "wancode.msg@gmail.com",
+#     "password": "wancode123"
 # }
 
 # eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMjVmNWJiMTQ5MGNkMWM3Y2JhNjAwZiIsImlhdCI6MTY0NjY1NTAxMywiZXhwIjoxNjQ2NzQxNDEzfQ.tN8k8jmuXRgUWyi2_9mrOxA3I2Rc58SMAKn76R0wRM0
@@ -17,8 +17,8 @@
 # Content-Type: application/json
 
 # {
-#     "email": "alwan@gmail.com",
-#     "password": "abcd1234"
+#     "email": "wancode.msg@gmail.com",
+#     "password": "wancode123"
 # }
 
 # DELETE http://localhost:4000/user/delete/610e174acc62717d51db57f7
@@ -56,3 +56,11 @@
 # DELETE http://localhost:4000/post/6102512d0d958d244a2ac3ee
 
 # ---------- POST -----------
+
+# ACTIVATION
+# POST http://localhost:4000/activation
+# Content-Type: application/json
+
+# {
+#     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNmI5ZDc4ZjNhMGU5NWRiMzlmYTYyOSIsImlhdCI6MTY1MTIxOTgzMywiZXhwIjoxNjUxMzA2MjMzfQ.FVwuGUM8YFZvLFlubSFyXrLwbnze0DT4idXIZd0dXAs"
+# }
