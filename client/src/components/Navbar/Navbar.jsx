@@ -11,12 +11,13 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isSigned, setIsSigned] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -215,7 +216,7 @@ const Navbar = () => {
               </>
             ) : (
               <Button
-                onClick={() => setIsSigned(true)}
+                onClick={() => navigate("/auth")}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 Sign In

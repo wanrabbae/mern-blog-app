@@ -28,8 +28,8 @@ const userSchema = mongoose.Schema({
   email: {
     type: String,
     unique: true,
-    required: [true, "Email harus diisi!"],
-    validate: [isEmail, "Email tidak valid!"],
+    required: [true, "Email must filled!"],
+    validate: [isEmail, "Email not valid!"],
   },
   password: {
     type: String,

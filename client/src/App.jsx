@@ -2,6 +2,9 @@ import { Navbar, Footer } from "./components";
 import { Home, Posts, PostsWithCategory, Sign } from "./pages/index";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createMuiTheme, ThemeProvider } from "@mui/material";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
 
 const theme = createMuiTheme({
   palette: {
@@ -29,6 +32,12 @@ const RouteWithNavbarAndFooter = ({ element }) => {
 function App() {
   return (
     <div className="App">
+      <ToastContainer
+        autoClose={3000}
+        closeOnClick
+        draggable
+        position="top-right"
+      />
       <ThemeProvider theme={theme}>
         <Router>
           <Routes>

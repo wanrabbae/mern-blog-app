@@ -15,7 +15,7 @@ const errorHandler = (err) => {
   };
 
   if (err.code == 11000) {
-    errors.email = "Email sudah terdaftar!";
+    errors.email = "Email is already registered!";
   } else if (err.message.includes("auth validation failed")) {
     Object.values(err.errors).forEach(({ properties }) => {
       errors[properties.path] = properties.message;
@@ -123,7 +123,7 @@ const login = async (req, res) => {
     if (!findUser) {
       res.status(404).json({
         status: "failed",
-        message: "Email yang anda masukan salah!",
+        message: "Email is incorrect!",
       });
     }
 
@@ -140,7 +140,7 @@ const login = async (req, res) => {
     if (!auth) {
       res.status(400).json({
         status: "failed",
-        message: "Password yang anda masukan salah!",
+        message: "Password is incorrect!",
       });
     }
 
