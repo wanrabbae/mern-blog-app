@@ -27,7 +27,7 @@ router.put(
   userController.updateProfile
 );
 router.delete("/user/deleteProfile", auth.auth, userController.deleteProfile);
-router.post("/activation", userController.activationController);
+router.post("/user/activation", userController.activationController);
 
 // ------- AUTH / USER ---------
 

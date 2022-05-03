@@ -1,23 +1,50 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  Menu,
+  Container,
+  Avatar,
+  Button,
+  Tooltip,
+  MenuItem,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
 import { Link, useNavigate } from "react-router-dom";
+import decode from "jwt-decode";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isSigned, setIsSigned] = React.useState(false);
+  const [profilePicture, setProfilePicture] = React.useState(null);
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const { exp, pict } = decode(token);
+      setProfilePicture(pict);
+      if (exp) {
+        if (exp * 1000 < new Date().getTime()) {
+          setIsSigned(false);
+          toast.error("Your session has expired! Please login again.");
+          localStorage.clear();
+        } else setIsSigned(true);
+      } else {
+        setIsSigned(false);
+        localStorage.clear();
+      }
+    } catch (error) {
+      setIsSigned(false);
+      localStorage.clear();
+    }
+  }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -32,6 +59,12 @@ const Navbar = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/auth");
+    toast.success("Logout Successfully!");
   };
 
   return (
@@ -120,7 +153,7 @@ const Navbar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            LOGO
+            IndoCoders
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Link to="/" style={{ textDecoration: "none" }}>
@@ -181,10 +214,7 @@ const Navbar = () => {
               <>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src="/static/images/avatar/2.jpg"
-                    />
+                    <Avatar alt="Alwan" src={profilePicture} />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -206,10 +236,15 @@ const Navbar = () => {
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">Profile</Typography>
                   </MenuItem>
-                  <MenuItem onClick={handleCloseUserMenu}>
+                  {/* <MenuItem onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">Dashboard</Typography>
-                  </MenuItem>
-                  <MenuItem onClick={handleCloseUserMenu}>
+                  </MenuItem> */}
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseUserMenu();
+                      handleLogout();
+                    }}
+                  >
                     <Typography textAlign="center">Logout</Typography>
                   </MenuItem>
                 </Menu>

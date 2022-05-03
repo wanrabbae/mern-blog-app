@@ -1,18 +1,22 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  Paper,
+  Box,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { useDispatch } from "react-redux";
-import { loginAction } from "../../actions/authAction";
+import { loginAction, registerAction } from "../../actions/authAction";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Copyright(props) {
   return (
@@ -24,7 +28,7 @@ function Copyright(props) {
     >
       {"Copyright © "}
       <Link color="inherit" href="/">
-        Your Website
+        IndoCoders
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -34,21 +38,47 @@ function Copyright(props) {
 
 export default function Sign() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isSignUp, setIsSignUp] = React.useState(false);
   const [user, setUser] = React.useState({
+    name: "",
     email: "",
     password: "",
   });
 
   React.useEffect(() => {
     console.log("Sign page!");
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+    }
   }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await dispatch(loginAction(user));
+      await dispatch(loginAction(user, navigate));
+      setUser({
+        name: "",
+        email: "",
+        password: "",
+      });
     } catch (error) {
-      console.log(error);
+      toast.error("Something went wrong!");
+    }
+  };
+
+  const handleSubmitRegister = async (event) => {
+    event.preventDefault();
+    try {
+      await dispatch(registerAction(user, navigate));
+      setUser({
+        name: "",
+        email: "",
+        password: "",
+      });
+    } catch (error) {
+      toast.error("Something went wrong!");
     }
   };
 
@@ -71,80 +101,196 @@ export default function Sign() {
           backgroundPosition: "center",
         }}
       />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <Box
-          sx={{
-            my: 8,
-            mx: 4,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
+      {isSignUp ? (
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 1 }}
+            sx={{
+              my: 8,
+              mx: 4,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              type="email"
-              autoFocus
-              onChange={(e) => setUser({ ...user, email: e.target.value })}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={(e) => setUser({ ...user, password: e.target.value })}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign up
+            </Typography>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmitRegister}
+              sx={{ mt: 1 }}
             >
-              Sign In
-            </Button>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="name"
+                label="Name"
+                name="name"
+                autoComplete="name"
+                type="name"
+                autoFocus
+                value={user.name}
+                onChange={(e) => setUser({ ...user, name: e.target.value })}
+              />
 
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                type="email"
+                autoFocus
+                value={user.email}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={user.password}
+                onChange={(e) => setUser({ ...user, password: e.target.value })}
+              />
+
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 3 }}
+              >
+                Sign Up
+              </Button>
+              <Button fullWidth variant="contained">
+                Sign Up with Google
+              </Button>
+              <Button fullWidth variant="contained" sx={{ mt: 1, mb: 2 }}>
+                Sign Up with Github
+              </Button>
+
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot account?
+                  </Link>
+                </Grid>
+                <Grid
+                  item
+                  onClick={() => {
+                    setIsSignUp(false);
+                    setUser({ name: "", email: "", password: "" });
+                  }}
+                >
+                  <Link href="#" variant="body2">
+                    {"Already have an accounr? Sign In"}
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item onClick={() => console.log("register clicked!")}>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-            <Copyright sx={{ mt: 5 }} />
+              <Copyright sx={{ mt: 5 }} />
+            </Box>
           </Box>
-        </Box>
-      </Grid>
+        </Grid>
+      ) : (
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 1 }}
+            >
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                type="email"
+                autoFocus
+                value={user.email}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={user.password}
+                onChange={(e) => setUser({ ...user, password: e.target.value })}
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 3 }}
+              >
+                Sign In
+              </Button>
+              <Button fullWidth variant="contained" sx={{}}>
+                Sign In with Google
+              </Button>
+              <Button fullWidth variant="contained" sx={{ mt: 1, mb: 2 }}>
+                Sign In with Github
+              </Button>
+
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid
+                  item
+                  onClick={() => {
+                    setIsSignUp(true);
+                    setUser({ name: "", email: "", password: "" });
+                  }}
+                >
+                  <Link href="#" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
+              <Copyright sx={{ mt: 5 }} />
+            </Box>
+          </Box>
+        </Grid>
+      )}
     </Grid>
   );
 }

@@ -1,10 +1,15 @@
 import { Navbar, Footer } from "./components";
-import { Home, Posts, PostsWithCategory, Sign } from "./pages/index";
+import {
+  Home,
+  Posts,
+  PostsWithCategory,
+  Sign,
+  Activation,
+} from "./pages/index";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createMuiTheme, ThemeProvider } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect } from "react";
 
 const theme = createMuiTheme({
   palette: {
@@ -15,6 +20,13 @@ const theme = createMuiTheme({
     secondary: {
       main: "#fefefe",
     },
+  },
+  typography: {
+    fontFamily: "Poppins",
+    fontWeightLight: 400,
+    fontWeightRegular: 500,
+    fontWeightMedium: 600,
+    fontWeightBold: 700,
   },
 });
 
@@ -56,6 +68,7 @@ function App() {
               }
             />
             <Route path="/auth" element={<Sign />} />
+            <Route path="/user/activate" element={<Activation />} />
           </Routes>
         </Router>
       </ThemeProvider>

@@ -31,10 +31,11 @@ const createToken = (user) => {
       id: user._id,
       level: user.level,
       name: user.name,
+      pict: user.avatar.url,
     },
     process.env.JWT_TOKEN_SECRET,
     {
-      expiresIn: "30d",
+      expiresIn: "1d",
     }
   );
 };
@@ -83,7 +84,7 @@ const signUp = async (req, res) => {
       subject: `Account activation link (IndoCoders)`,
       html: `
       <h1>Please use the following to activate your account</h1>
-      <a href="${process.env.CLIENT_URL}/user/activate/${tokenActivation}" target="_blank">ACTIVATE YOUR ACCOUNT HERE</a>
+      <a href="${process.env.CLIENT_URL}user/activate?token=${tokenActivation}" target="_blank">ACTIVATE YOUR ACCOUNT HERE</a>
       <hr />
       <p>This email may containe sensetive information</p>
       <p>${process.env.CLIENT_URL}</p>
@@ -172,7 +173,7 @@ const activationController = async (req, res) => {
         if (err) {
           return res.status(400).json({
             status: "failed",
-            message: "Link expired!",
+            message: "Token link is expired!",
           });
         }
 
@@ -200,7 +201,7 @@ const activationController = async (req, res) => {
     console.log(error);
     res.status(400).json({
       status: "failed",
-      message: "something went wrong :(",
+      message: "Account not activated! maybe your token is expired",
     });
   }
 };
@@ -269,6 +270,10 @@ const deleteProfile = async (req, res) => {
       _id: decodeToken.id,
     });
 
+    await PostModel.deleteMany({
+      user: decodeToken.id,
+    });
+
     res.status(200).json({
       status: "success",
       message: "Hapus akun berhasil!",
@@ -322,9 +327,11 @@ const updateProfile = async (req, res) => {
         message: "User tidak ditemukan!",
       });
 
-    const deleteAvatar = await cloudinary.uploader.destroy(
-      findUser.avatar.public_id
-    );
+    if (findUser.avatar.public_id !== "UserDefault_404404379_aoxjai") {
+      const deleteAvatar = await cloudinary.uploader.destroy(
+        findUser.avatar.public_id
+      );
+    }
 
     const uploadAvatar = await cloudinary.uploader.upload(req.file.path);
 

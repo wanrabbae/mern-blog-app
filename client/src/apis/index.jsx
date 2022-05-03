@@ -5,12 +5,12 @@ const api = axios.create({
 });
 
 // kirim setiap request ke server dengan header Authorization yang berisi token
-// api.interceptors.request.use((req) => {
-//   const token = localStorage.getItem("token");
-//   if (token) {
-//     req.headers.Authorization = `${token}`;
-//   }
-//   return req;
-// });
+api.interceptors.request.use((req) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    req.headers.Authorization = `${token}`;
+  }
+  return req;
+});
 
 export default api;

@@ -7,8 +7,8 @@ const userSchema = mongoose.Schema({
       String,
     },
     default: {
-      url: "https://res.cloudinary.com/touchme/image/upload/v1628760733/userDefault_n8pn0l.png",
-      public_id: "userDefault_n8pn0l",
+      url: "https://res.cloudinary.com/touchme/image/upload/v1651550876/UserDefault_404404379_aoxjai.png",
+      public_id: "UserDefault_404404379_aoxjai",
     },
   },
   name: {
