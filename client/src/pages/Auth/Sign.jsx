@@ -1,5 +1,7 @@
 import * as React from "react";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import GoogleIcon from "@mui/icons-material/Google";
+import GitHubIcon from "@mui/icons-material/GitHub";
 import {
   Avatar,
   Button,
@@ -12,11 +14,13 @@ import {
   Box,
   Grid,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { loginAction, registerAction } from "../../actions/authAction";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { GoogleLogin } from "react-google-login";
 
 function Copyright(props) {
   return (
@@ -80,6 +84,14 @@ export default function Sign() {
     } catch (error) {
       toast.error("Something went wrong!");
     }
+  };
+
+  const responseSuccessGoogle = async (response) => {
+    console.log(response);
+  };
+
+  const responseFailureGoogle = (err) => {
+    console.log(err);
   };
 
   return (
@@ -261,13 +273,32 @@ export default function Sign() {
               >
                 Sign In
               </Button>
-              <Button fullWidth variant="contained" sx={{}}>
-                Sign In with Google
-              </Button>
-              <Button fullWidth variant="contained" sx={{ mt: 1, mb: 2 }}>
+              <GoogleLogin
+                clientId="778989205207-4amfgfequithj8g1kapgr24rvr0t9hkh.apps.googleusercontent.com"
+                render={(renderProps) => (
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    startIcon={<GoogleIcon />}
+                    sx={{}}
+                    onClick={renderProps.onClick}
+                    disabled={renderProps.disabled}
+                  >
+                    Sign In with Google
+                  </Button>
+                )}
+                onSuccess={responseSuccessGoogle}
+                onFailure={responseFailureGoogle}
+              />
+              ,
+              <Button
+                fullWidth
+                variant="contained"
+                startIcon={<GitHubIcon />}
+                sx={{ mb: 2 }}
+              >
                 Sign In with Github
               </Button>
-
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">

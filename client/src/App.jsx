@@ -5,9 +5,10 @@ import {
   PostsWithCategory,
   Sign,
   Activation,
+  Profile,
 } from "./pages/index";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { createMuiTheme, ThemeProvider } from "@mui/material";
+import { createMuiTheme, ThemeProvider, Box } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -16,9 +17,6 @@ const theme = createMuiTheme({
     primary: {
       main: "#1D4ED8",
       dark: "#1D4ED8",
-    },
-    secondary: {
-      main: "#fefefe",
     },
   },
   typography: {
@@ -33,9 +31,18 @@ const theme = createMuiTheme({
 const RouteWithNavbarAndFooter = ({ element }) => {
   return (
     <>
-      <Navbar />
-      {element}
-      <Footer />
+      <Box
+        sx={{
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        <Navbar />
+        {element}
+        <Footer />
+      </Box>
     </>
   );
 };
@@ -69,6 +76,10 @@ function App() {
             />
             <Route path="/auth" element={<Sign />} />
             <Route path="/user/activate" element={<Activation />} />
+            <Route
+              path="/user/profile"
+              element={<RouteWithNavbarAndFooter element={<Profile />} />}
+            />
           </Routes>
         </Router>
       </ThemeProvider>
