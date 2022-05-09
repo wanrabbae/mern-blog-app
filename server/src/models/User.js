@@ -35,7 +35,13 @@ const userSchema = mongoose.Schema({
     type: String,
   },
   social: {
-    type: [Object],
+    type: Object,
+    default: {
+      facebook: "https://www.facebook.com/",
+      instagram: "https://www.instagram.com/",
+      twitter: "https://www.twitter.com/",
+      github: "https://www.github.com/",
+    },
   },
   post: [
     {

@@ -28,6 +28,7 @@ router.put(
 );
 router.delete("/user/deleteProfile", auth.auth, userController.deleteProfile);
 router.post("/user/activation", userController.activationController);
+router.post("/google/login", userController.googleController);
 
 // ------- AUTH / USER ---------
 

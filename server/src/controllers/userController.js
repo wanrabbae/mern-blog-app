@@ -35,7 +35,7 @@ const createToken = (user) => {
     },
     process.env.JWT_TOKEN_SECRET,
     {
-      expiresIn: "1d",
+      expiresIn: "30d",
     }
   );
 };
@@ -52,20 +52,6 @@ const signUp = async (req, res) => {
       name: name,
       email: email,
       password: hashedPassword,
-      social: [
-        {
-          facebook: "https://www.facebook.com/",
-        },
-        {
-          instagram: "https://www.instagram.com/",
-        },
-        {
-          twitter: "https://www.twitter.com/",
-        },
-        {
-          github: "https://www.github.com/",
-        },
-      ],
     });
 
     const tokenActivation = jwt.sign(
@@ -102,7 +88,7 @@ const signUp = async (req, res) => {
 
     res.status(200).json({
       status: "success",
-      message: `Email has been sent to ${user[0].email}`,
+      message: `Email has been sent to ${user[0].email} for activation`,
     });
   } catch (err) {
     const errors = errorHandler(err);
@@ -157,6 +143,50 @@ const login = async (req, res) => {
     res.json({
       status: "failed",
       message: "something went wrong :(",
+    });
+  }
+};
+
+// google login ctrl
+const googleController = async (req, res) => {
+  const { email, name, avatar } = req.body;
+
+  const findUser = await UserModel.findOne({ email });
+
+  if (findUser) {
+    const token = createToken(findUser);
+
+    return res.status(200).json({
+      status: "success",
+      message: "Berhasil Sign In",
+      token: token,
+    });
+  } else {
+    let password = email + process.env.JWT_TOKEN_SECRET;
+    const user = await UserModel.insertMany({
+      avatar: {
+        url: avatar,
+        public_id: "googleLoginAvatar",
+      },
+      name: name,
+      email: email,
+      password: password,
+      isActive: true,
+    });
+
+    if (!user) {
+      res.status(400).json({
+        status: "failed",
+        message: "Something went wrong :(",
+      });
+    }
+
+    const token = createToken(user[0]);
+
+    res.status(200).json({
+      status: "success",
+      message: "Berhasil Sign Up",
+      token: token,
     });
   }
 };
@@ -327,7 +357,10 @@ const updateProfile = async (req, res) => {
         message: "User tidak ditemukan!",
       });
 
-    if (findUser.avatar.public_id !== "UserDefault_404404379_aoxjai") {
+    if (
+      findUser.avatar.public_id !== "UserDefault_404404379_aoxjai" ||
+      findUser.avatar.public_id !== "googleLoginAvatar"
+    ) {
       const deleteAvatar = await cloudinary.uploader.destroy(
         findUser.avatar.public_id
       );
@@ -347,20 +380,12 @@ const updateProfile = async (req, res) => {
           url: uploadAvatar.secure_url,
           public_id: uploadAvatar.public_id,
         },
-        medsos: [
-          {
-            facebook: `https://www.facebook.com/${facebook}`,
-          },
-          {
-            instagram: `https://www.instagram.com/${instagram}`,
-          },
-          {
-            twitter: `https://www.twitter.com/${twitter}`,
-          },
-          {
-            github: `https://www.github.com/${github}`,
-          },
-        ],
+        social: {
+          facebook: `https://www.facebook.com/${facebook}`,
+          instagram: `https://www.instagram.com/${instagram}`,
+          twitter: `https://www.twitter.com/${twitter}`,
+          github: `https://www.github.com/${github}`,
+        },
         name: name,
         email: email,
         password: hashedPassword,
@@ -389,4 +414,5 @@ module.exports = {
   deleteProfile,
   updateProfile,
   activationController,
+  googleController,
 };

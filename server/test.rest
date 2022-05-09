@@ -1,5 +1,5 @@
 # ---------- AUTH -----------
-GET http://localhost:4000/api/users
+# GET http://localhost:4000/api/users
 # auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im93bHh4QGdtYWlsLmNvbSIsImlhdCI6MTYyOTk0NjI3OCwiZXhwIjoxNjI5OTQ2ODc4fQ._ptrJdeO39yi84jwoOa2A-ua3GZIS_0KsUbe1OS12hw
 
 # POST http://localhost:4000/signup
@@ -28,7 +28,7 @@ GET http://localhost:4000/api/users
 
 # ---------- POST -----------
 
-# GET http://localhost:4000/posts
+# GET http://localhost:4000/api/posts
 # auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFsd2FuQGdtYWlsLmNvbSIsImlhdCI6MTYyODgxMzk4MiwiZXhwIjoxNjI4ODE3NTgyfQ.meeWeNE7yBxuK1bu8SQpb3guInNZ7oCjq9CLgYxQ08E
 
 # POST http://localhost:4000/posts

@@ -234,7 +234,12 @@ const Navbar = () => {
                   onClose={handleCloseUserMenu}
                 >
                   <MenuItem onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">Profile</Typography>
+                    <Typography
+                      textAlign="center"
+                      onClick={() => navigate("/user/profile")}
+                    >
+                      Profile
+                    </Typography>
                   </MenuItem>
                   {/* <MenuItem onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">Dashboard</Typography>

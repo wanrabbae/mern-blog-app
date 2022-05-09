@@ -11,3 +11,7 @@ export const register = (data) => {
 export const activate = (token) => {
   return api.post("/user/activation", { token: token });
 };
+
+export const googleLogin = (data) => {
+  return api.post("/google/login", data);
+};

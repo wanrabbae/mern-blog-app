@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Typography,
@@ -11,10 +11,67 @@ import {
   CardContent,
   CardMedia,
   Alert,
+  Link,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import TwitterIcon from "@mui/icons-material/Twitter";
+
+import { getProfileAction } from "../../actions/userAction";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState({
+    avatar: "",
+    name: "",
+    bio: "",
+    social: {},
+    post: [],
+  });
+
+  useEffect(async () => {
+    const data = await getProfileAction(navigate);
+    setProfile(data);
+  }, []);
+
+  // const userSocialMedia = profile.social.map((social) => (
+  //   <>
+  //     <Link href={social.github} target="_blank" underline="none">
+  //       <GitHubIcon />
+  //     </Link>
+  //     <InstagramIcon />
+  //     <FacebookIcon />
+  //     <TwitterIcon />
+  //     <GitHubIcon />
+  // ));
+
+  const userPosts = profile.post.map((post) => (
+    <Card sx={{ maxWidth: 345, height: 400 }}>
+      <CardMedia
+        component="img"
+        height="200"
+        image={post.cover.url}
+        alt="green iguana"
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h6" component="div">
+          {post.title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {post.content}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button size="small" onClick={() => navigate(`/post/${post.id}`)}>
+          Read More
+        </Button>
+      </CardActions>
+    </Card>
+  ));
+
   return (
     <Container sx={{ marginTop: "7rem" }}>
       {/* USER PROFILE */}
@@ -26,13 +83,13 @@ export default function Profile() {
           alignItems={{ xs: "center", sm: "" }}
         >
           <Avatar
-            alt="Alwan"
-            src="/images/AlwanProfile.jpg"
+            alt="Porfile"
+            src={profile.avatar.url}
             sx={{ width: 150, height: 150 }}
           />
           <Stack direction="column" spacing={3}>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-              <Typography variant="h6">Name</Typography>
+              <Typography variant="h6">{profile.name}</Typography>
               <Button variant="outlined" color="primary" size="small">
                 Edit profile
               </Button>
@@ -49,15 +106,46 @@ export default function Profile() {
               </Typography>
             </Stack>
             <Stack direction="row" spacing={2}>
+              <Link
+                href={profile.social.instagram}
+                target="_blank"
+                underline="none"
+                sx={{ color: "#fb3958" }}
+              >
+                <InstagramIcon />
+              </Link>
+              <Link
+                href={profile.social.facebook}
+                target="_blank"
+                underline="none"
+                sx={{ color: "#4267B2" }}
+              >
+                <FacebookIcon />
+              </Link>
+              <Link
+                href={profile.social.twitter}
+                target="_blank"
+                underline="none"
+                sx={{ color: "#00acee" }}
+              >
+                <TwitterIcon />
+              </Link>
+              <Link
+                href={profile.social.github}
+                target="_blank"
+                underline="none"
+                sx={{ color: "black" }}
+              >
+                <GitHubIcon />
+              </Link>
+            </Stack>
+            <Stack direction="row" spacing={2}>
               <Typography
                 variant="subtitle2"
                 sx={{ width: "400px" }}
                 fontWeight={400}
               >
-                BIO Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Quidem architecto quibusdam aliquid, quasi hic sed corrupti
-                reiciendis ex officia suscipit quia temporibus illum a qui
-                molestiae cupiditate sunt sequi expedita!
+                {profile.bio}
               </Typography>
             </Stack>
           </Stack>
@@ -75,96 +163,28 @@ export default function Profile() {
           Posts
         </Typography>
 
-        <Stack
-          mt={3}
-          spacing={3}
-          direction={{ xs: "column", sm: "row" }}
-          justifyContent="center"
-          alignItems={{ xs: "center", sm: "" }}
-        >
-          <Card sx={{ maxWidth: 345 }}>
-            <CardMedia
-              component="img"
-              height="140"
-              image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
-              alt="green iguana"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Lizards are a widespread group of squamate reptiles, with over
-                6,000 species, ranging across all continents except Antarctica
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small">Read More</Button>
-            </CardActions>
-          </Card>
-          <Card sx={{ maxWidth: 345 }}>
-            <CardMedia
-              component="img"
-              height="140"
-              image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
-              alt="green iguana"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Lizards are a widespread group of squamate reptiles, with over
-                6,000 species, ranging across all continents except Antarctica
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small">Read More</Button>
-              {/* <Button size="small">Share</Button> */}
-            </CardActions>
-          </Card>
-          <Card sx={{ maxWidth: 345 }}>
-            <CardMedia
-              component="img"
-              height="140"
-              image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
-              alt="green iguana"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Lizards are a widespread group of squamate reptiles, with over
-                6,000 species, ranging across all continents except Antarctica
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small">Read More</Button>
-              {/* <Button size="small">Share</Button> */}
-            </CardActions>
-          </Card>
-        </Stack>
+        {profile.post.length > 0 ? (
+          userPosts
+        ) : (
+          <Box>
+            <Alert severity="warning">
+              You have no posts. You can create a post by clicking the button
+              below.
+            </Alert>
 
-        {/* SHOW THIS IF USER NOT HAVE POSTS */}
-        {/* <Box>
-          <Alert severity="warning">
-            You have no posts. You can create a post by clicking the button
-            below.
-          </Alert>
-
-          <center>
-            <Button
-              variant="outlined"
-              color="primary"
-              size="large"
-              sx={{ marginTop: "20px" }}
-              startIcon={<AddIcon />}
-            >
-              Create post
-            </Button>
-          </center>
-        </Box> */}
+            <center>
+              <Button
+                variant="outlined"
+                color="primary"
+                size="large"
+                sx={{ marginTop: "20px" }}
+                startIcon={<AddIcon />}
+              >
+                Create post
+              </Button>
+            </center>
+          </Box>
+        )}
       </Box>
     </Container>
   );

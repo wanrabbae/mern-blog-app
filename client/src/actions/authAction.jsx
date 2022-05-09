@@ -1,4 +1,4 @@
-import { login, register, activate } from "../apis/auth";
+import { login, register, activate, googleLogin } from "../apis/auth";
 import { toast } from "react-toastify";
 
 export const loginAction = (dataUser, navigate) => async (dispatch) => {
@@ -38,6 +38,17 @@ export const activateAction = (token, navigate) => async (dispatch) => {
     });
     toast.success(data.message);
     navigate("/auth");
+  } catch (error) {
+    toast.error(error.response.data.message);
+  }
+};
+
+export const googleLoginAction = async (dataUser, navigate) => {
+  try {
+    const { data } = await googleLogin(dataUser);
+    localStorage.setItem("token", data.token);
+    toast.success(data.message);
+    navigate("/");
   } catch (error) {
     toast.error(error.response.data.message);
   }

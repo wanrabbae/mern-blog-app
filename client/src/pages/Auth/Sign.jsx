@@ -17,7 +17,11 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { loginAction, registerAction } from "../../actions/authAction";
+import {
+  loginAction,
+  registerAction,
+  googleLoginAction,
+} from "../../actions/authAction";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { GoogleLogin } from "react-google-login";
@@ -87,11 +91,22 @@ export default function Sign() {
   };
 
   const responseSuccessGoogle = async (response) => {
-    console.log(response);
+    try {
+      await googleLoginAction(
+        {
+          email: response?.profileObj.email,
+          name: response?.profileObj.name || response?.profileObj.givenName,
+          avatar: response?.profileObj.imageUrl,
+        },
+        navigate
+      );
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
   };
 
   const responseFailureGoogle = (err) => {
-    console.log(err);
+    toast.error("Ups! Something went wrong :(");
   };
 
   return (
@@ -184,9 +199,23 @@ export default function Sign() {
               >
                 Sign Up
               </Button>
-              <Button fullWidth variant="contained">
-                Sign Up with Google
-              </Button>
+              <GoogleLogin
+                clientId="778989205207-4amfgfequithj8g1kapgr24rvr0t9hkh.apps.googleusercontent.com"
+                render={(renderProps) => (
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    startIcon={<GoogleIcon />}
+                    sx={{}}
+                    onClick={renderProps.onClick}
+                    disabled={renderProps.disabled}
+                  >
+                    Sign Up with Google
+                  </Button>
+                )}
+                onSuccess={responseSuccessGoogle}
+                onFailure={responseFailureGoogle}
+              />
               <Button fullWidth variant="contained" sx={{ mt: 1, mb: 2 }}>
                 Sign Up with Github
               </Button>
@@ -205,7 +234,7 @@ export default function Sign() {
                   }}
                 >
                   <Link href="#" variant="body2">
-                    {"Already have an accounr? Sign In"}
+                    {"Already have an account? Sign In"}
                   </Link>
                 </Grid>
               </Grid>
@@ -269,7 +298,7 @@ export default function Sign() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 3 }}
+                sx={{ mt: 3, mb: 2 }}
               >
                 Sign In
               </Button>
@@ -290,12 +319,11 @@ export default function Sign() {
                 onSuccess={responseSuccessGoogle}
                 onFailure={responseFailureGoogle}
               />
-              ,
               <Button
                 fullWidth
                 variant="contained"
                 startIcon={<GitHubIcon />}
-                sx={{ mb: 2 }}
+                sx={{ mt: 1, mb: 2 }}
               >
                 Sign In with Github
               </Button>
