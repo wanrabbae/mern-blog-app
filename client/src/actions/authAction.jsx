@@ -1,4 +1,10 @@
-import { login, register, activate, googleLogin } from "../apis/auth";
+import {
+  login,
+  register,
+  activate,
+  googleLogin,
+  getAccessTokenGithub,
+} from "../apis/auth";
 import { toast } from "react-toastify";
 
 export const loginAction = (dataUser, navigate) => async (dispatch) => {
@@ -51,5 +57,15 @@ export const googleLoginAction = async (dataUser, navigate) => {
     navigate("/");
   } catch (error) {
     toast.error(error.response.data.message);
+  }
+};
+
+export const githubAccessToken = async (code, client_id, client_secret) => {
+  try {
+    const response = await getAccessTokenGithub(code, client_id, client_secret);
+    return response.data.access_token;
+  } catch (error) {
+    console.log(error);
+    toast.error("Github authorization failed!");
   }
 };

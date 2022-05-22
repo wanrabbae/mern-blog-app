@@ -180,6 +180,7 @@ const createPost = async (req, res) => {
       },
       category: data.category.toLowerCase(),
       title: data.title,
+      description: data.description,
       content: data.content,
     })
       .then(async (result) => {

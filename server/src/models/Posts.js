@@ -21,6 +21,10 @@ const postSchema = mongoose.Schema(
       type: String,
       required: [true, "Judul harus diisi!"],
     },
+    description: {
+      type: String,
+      required: [true, "Deskripsi harus diisi!"],
+    },
     content: {
       type: String,
       required: [true, "Content harus diisi!"],

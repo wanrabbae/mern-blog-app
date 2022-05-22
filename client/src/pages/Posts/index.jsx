@@ -1,11 +1,12 @@
 import React from "react";
-import { Posts } from "../../components";
-import { Button, Container } from "@mui/material";
+import { Button, Container, Typography } from "@mui/material";
 
 export default function index() {
   return (
     <Container>
-      <Posts />
+      <div className="posts">
+        <Typography variant="h2">Posts</Typography>
+      </div>
     </Container>
   );
 }

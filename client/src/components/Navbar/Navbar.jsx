@@ -153,7 +153,7 @@ const Navbar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            IndoCoders
+            IndoC0ders
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Link to="/" style={{ textDecoration: "none" }}>
@@ -239,6 +239,14 @@ const Navbar = () => {
                       onClick={() => navigate("/user/profile")}
                     >
                       Profile
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Typography
+                      textAlign="center"
+                      onClick={() => navigate("/user/profile")}
+                    >
+                      Create Post
                     </Typography>
                   </MenuItem>
                   {/* <MenuItem onClick={handleCloseUserMenu}>

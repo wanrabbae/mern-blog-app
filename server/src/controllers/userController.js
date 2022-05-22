@@ -49,6 +49,10 @@ const signUp = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await UserModel.insertMany({
+      avatar: {
+        url: `https://ui-avatars.com/api/?background=random&name=${name}`,
+        public_id: "UserDefault_404404379_aoxjai",
+      },
       name: name,
       email: email,
       password: hashedPassword,
@@ -345,6 +349,7 @@ const updateProfile = async (req, res) => {
   const { name, email, password, facebook, instagram, twitter, github } =
     req.body;
   const decodeToken = req.decoded;
+  let uploadAvatar;
 
   try {
     const findUser = await UserModel.findOne({
@@ -357,16 +362,18 @@ const updateProfile = async (req, res) => {
         message: "User tidak ditemukan!",
       });
 
-    if (
-      findUser.avatar.public_id !== "UserDefault_404404379_aoxjai" ||
-      findUser.avatar.public_id !== "googleLoginAvatar"
-    ) {
-      const deleteAvatar = await cloudinary.uploader.destroy(
-        findUser.avatar.public_id
-      );
-    }
+    if (req.file) {
+      if (
+        findUser.avatar.public_id !== "UserDefault_404404379_aoxjai" ||
+        findUser.avatar.public_id !== "googleLoginAvatar"
+      ) {
+        const deleteAvatar = await cloudinary.uploader.destroy(
+          findUser.avatar.public_id
+        );
+      }
 
-    const uploadAvatar = await cloudinary.uploader.upload(req.file.path);
+      uploadAvatar = await cloudinary.uploader.upload(req.file.path);
+    }
 
     // hash password
     const hashedPassword = await bcrypt.hash(password, 10);

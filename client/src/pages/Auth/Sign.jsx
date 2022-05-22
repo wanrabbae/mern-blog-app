@@ -21,10 +21,16 @@ import {
   loginAction,
   registerAction,
   googleLoginAction,
+  githubAccessToken,
 } from "../../actions/authAction";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { GoogleLogin } from "react-google-login";
+
+/* 
+  GITHUB CLIENT ID = dded9a2b3c92c68b3cda
+  GITHUB CLIENT SECRET = 939c81228e427f2d113c6ae06446910bb976fc32
+*/
 
 function Copyright(props) {
   return (
@@ -47,6 +53,7 @@ function Copyright(props) {
 export default function Sign() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [isSignUp, setIsSignUp] = React.useState(false);
   const [user, setUser] = React.useState({
     name: "",
@@ -54,11 +61,20 @@ export default function Sign() {
     password: "",
   });
 
-  React.useEffect(() => {
+  React.useEffect(async () => {
     console.log("Sign page!");
     const token = localStorage.getItem("token");
     if (token) {
       navigate("/");
+    }
+
+    if (searchParams.get("code")) {
+      const accessToken = await githubAccessToken(
+        searchParams.get("code"),
+        "dded9a2b3c92c68b3cda",
+        "939c81228e427f2d113c6ae06446910bb976fc32"
+      );
+      console.log(accessToken);
     }
   }, []);
 
@@ -106,7 +122,7 @@ export default function Sign() {
   };
 
   const responseFailureGoogle = (err) => {
-    toast.error("Ups! Something went wrong :(");
+    console.log("GOOGLE LOGIN ERROR");
   };
 
   return (
@@ -300,6 +316,7 @@ export default function Sign() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
+                {/* <CircularProgress color="white" /> */}
                 Sign In
               </Button>
               <GoogleLogin
@@ -321,6 +338,15 @@ export default function Sign() {
               />
               <Button
                 fullWidth
+                onClick={() => {
+                  window.open(
+                    `https://github.com/login/oauth/authorize?client_id=dded9a2b3c92c68b3cda&allow_signup=true`,
+                    "_blank"
+                  ) ||
+                    window.location.replace(
+                      `https://github.com/login/oauth/authorize?client_id=dded9a2b3c92c68b3cda&allow_signup=true`
+                    );
+                }}
                 variant="contained"
                 startIcon={<GitHubIcon />}
                 sx={{ mt: 1, mb: 2 }}

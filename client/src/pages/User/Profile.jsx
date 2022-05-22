@@ -96,7 +96,7 @@ export default function Profile() {
             </Stack>
             <Stack direction="row" spacing={2}>
               <Typography variant="subtitle2" fontWeight={400}>
-                2 posts
+                {profile.post.length} posts
               </Typography>
               <Typography variant="subtitle2" fontWeight={400}>
                 1342 followers

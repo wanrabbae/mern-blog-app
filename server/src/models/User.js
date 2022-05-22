@@ -6,10 +6,10 @@ const userSchema = mongoose.Schema({
     type: {
       String,
     },
-    default: {
-      url: "https://res.cloudinary.com/touchme/image/upload/v1651550876/UserDefault_404404379_aoxjai.png",
-      public_id: "UserDefault_404404379_aoxjai",
-    },
+    // default: {
+    //   url: "https://res.cloudinary.com/touchme/image/upload/v1651550876/UserDefault_404404379_aoxjai.png",
+    //   public_id: "UserDefault_404404379_aoxjai",
+    // },
   },
   name: {
     type: String,
