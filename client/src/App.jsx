@@ -6,6 +6,7 @@ import {
   Sign,
   Activation,
   Profile,
+  EditProfile,
 } from "./pages/index";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createMuiTheme, ThemeProvider, Box } from "@mui/material";
@@ -79,6 +80,10 @@ function App() {
             <Route
               path="/user/profile"
               element={<RouteWithNavbarAndFooter element={<Profile />} />}
+            />
+            <Route
+              path="/user/edit-profile"
+              element={<RouteWithNavbarAndFooter element={<EditProfile />} />}
             />
           </Routes>
         </Router>

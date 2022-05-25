@@ -21,9 +21,11 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 
 import { getProfileAction } from "../../actions/userAction";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 export default function Profile() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [profile, setProfile] = useState({
     avatar: "",
     name: "",
@@ -33,7 +35,7 @@ export default function Profile() {
   });
 
   useEffect(async () => {
-    const data = await getProfileAction(navigate);
+    const data = await dispatch(getProfileAction(navigate));
     setProfile(data);
   }, []);
 
@@ -90,7 +92,12 @@ export default function Profile() {
           <Stack direction="column" spacing={3}>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
               <Typography variant="h6">{profile.name}</Typography>
-              <Button variant="outlined" color="primary" size="small">
+              <Button
+                onClick={() => navigate("/user/edit-profile")}
+                variant="outlined"
+                color="primary"
+                size="small"
+              >
                 Edit profile
               </Button>
             </Stack>

@@ -68,14 +68,14 @@ export default function Sign() {
       navigate("/");
     }
 
-    if (searchParams.get("code")) {
-      const accessToken = await githubAccessToken(
-        searchParams.get("code"),
-        "dded9a2b3c92c68b3cda",
-        "939c81228e427f2d113c6ae06446910bb976fc32"
-      );
-      console.log(accessToken);
-    }
+    // if (searchParams.get("code")) {
+    //   const accessToken = await githubAccessToken(
+    //     searchParams.get("code"),
+    //     "dded9a2b3c92c68b3cda",
+    //     "939c81228e427f2d113c6ae06446910bb976fc32"
+    //   );
+    //   console.log(accessToken);
+    // }
   }, []);
 
   const handleSubmit = async (event) => {
