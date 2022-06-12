@@ -362,6 +362,8 @@ const updateProfile = async (req, res) => {
         message: "User tidak ditemukan!",
       });
 
+    uploadAvatar = findUser.avatar;
+
     if (req.file) {
       if (
         findUser.avatar.public_id !== "UserDefault_404404379_aoxjai" ||
@@ -374,11 +376,11 @@ const updateProfile = async (req, res) => {
 
       uploadAvatar = await cloudinary.uploader.upload(req.file.path);
     }
-
+    let hashedPassword;
     // hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    if (password) hashedPassword = await bcrypt.hash(password, 10);
 
-    await UserModel.updateOne(
+    const updatedUser = await UserModel.updateOne(
       {
         _id: decodeToken.id,
       },
@@ -388,20 +390,38 @@ const updateProfile = async (req, res) => {
           public_id: uploadAvatar.public_id,
         },
         social: {
-          facebook: `https://www.facebook.com/${facebook}`,
-          instagram: `https://www.instagram.com/${instagram}`,
-          twitter: `https://www.twitter.com/${twitter}`,
-          github: `https://www.github.com/${github}`,
+          facebook:
+            facebook == null || facebook == undefined
+              ? findUser.social.facebook
+              : `https://www.facebook.com/${facebook}`,
+
+          instagram:
+            instagram == null || instagram == undefined
+              ? findUser.social.instagram
+              : `https://www.instagram.com/${instagram}`,
+
+          twitter:
+            twitter == null || twitter == undefined
+              ? findUser.social.twitter
+              : `https://www.twitter.com/${twitter}`,
+          github:
+            github == null || github == undefined
+              ? findUser.social.github
+              : `https://www.github.com/${github}`,
         },
-        name: name,
-        email: email,
-        password: hashedPassword,
+        name: name == null || name == undefined ? findUser.name : name,
+        email: email == null || email == undefined ? findUser.email : email,
+        password:
+          password == null || password == undefined
+            ? findUser.password
+            : hashedPassword,
       }
     );
 
     res.status(200).json({
       status: "success",
       message: "Berhasil mengubah profile!",
+      data: updatedUser,
     });
   } catch (err) {
     const errors = errorHandler(err);
