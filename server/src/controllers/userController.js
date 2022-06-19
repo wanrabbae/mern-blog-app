@@ -271,6 +271,31 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const getUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await UserModel.findOne({
+      _id: id,
+    });
+
+    return res.status(200).json({
+      status: "success",
+      data: user,
+    });
+  } catch (error) {
+    if (error.status == 404)
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+
+    res.status(500).json({
+      status: "error",
+      message: "Something went wrong",
+    });
+  }
+};
+
 const getProfile = async (req, res) => {
   try {
     const idUser = req.decoded.id;
@@ -346,7 +371,7 @@ const deleteUserById = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-  const { name, email, password, facebook, instagram, twitter, github } =
+  const { name, email, bio, password, facebook, instagram, twitter, github } =
     req.body;
   const decodeToken = req.decoded;
   let uploadAvatar;
@@ -410,6 +435,7 @@ const updateProfile = async (req, res) => {
               : `https://www.github.com/${github}`,
         },
         name: name == null || name == undefined ? findUser.name : name,
+        bio: bio == null || bio == undefined ? findUser.bio : bio,
         email: email == null || email == undefined ? findUser.email : email,
         password:
           password == null || password == undefined
@@ -436,6 +462,7 @@ module.exports = {
   signUp,
   login,
   getAllUsers,
+  getUserById,
   getProfile,
   deleteUserById,
   deleteProfile,

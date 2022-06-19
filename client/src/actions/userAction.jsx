@@ -23,6 +23,7 @@ export const getProfileAction = (navigate) => async (dispatch) => {
 export const updateProfileAction = (data, navigate) => async (dispatch) => {
   try {
     const response = await updateProfile(data);
+
     dispatch({
       type: "UPDATE_PROFILE",
       payload: response.data.data,

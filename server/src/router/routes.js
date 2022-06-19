@@ -20,6 +20,7 @@ router.post("/signup", userController.signUp);
 router.post("/signin", userController.login);
 router.get("/users", userController.getAllUsers);
 router.get("/user/getProfile", auth.auth, userController.getProfile);
+router.get("/users/:id", userController.getUserById);
 router.put(
   "/user/updateProfile",
   upload.single("picture"),

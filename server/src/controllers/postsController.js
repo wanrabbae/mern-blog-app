@@ -3,6 +3,7 @@ const UserModel = require("../models/User");
 const CategoryModel = require("../models/Category");
 const { cloudinary } = require("../../config/cloudinary");
 const fs = require("fs");
+const { log } = require("console");
 
 // errors handling
 const handleErrors = (err) => {
@@ -168,7 +169,7 @@ const getPostByKategori = async (req, res) => {
 const createPost = async (req, res) => {
   const data = req.body;
   const idUser = req.decoded.id; // id user yang sedang login berasal dari middleware auth
-
+  console.log(data.title);
   await cloudinary.uploader.upload(req.file.path, (err, result) => {
     if (err) console.log(err);
 

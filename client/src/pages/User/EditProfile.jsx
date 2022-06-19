@@ -9,28 +9,42 @@ import {
   TextField,
 } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { updateProfileAction } from "../../actions/userAction";
+import { toast } from "react-toastify";
+import {
+  updateProfileAction,
+  getProfileAction,
+} from "../../actions/userAction";
 
 export default function EditProfile() {
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
+  const [user, setUser] = useState({});
   const dispatch = useDispatch();
   const [userState, setUserState] = useState({
-    name: user.name,
-    email: user.email,
-    bio: user.bio,
-    facebook: user.social.facebook,
-    instagram: user.social.instagram,
-    twitter: user.social.twitter,
-    github: user.social.github,
+    name: "",
+    email: "",
+    bio: "user.bio",
+    facebook: "user.social.facebook",
+    instagram: "user.social.instagram",
+    twitter: "user.social.twitter",
+    github: "user.social.github",
   });
 
+  useEffect(async () => {
+    const data = await dispatch(getProfileAction(navigate));
+    setUser(data);
+  }, []);
+
   const updateProfile = async () => {
-    const response = await dispatch(updateProfileAction(userState, navigate));
-    console.log(response);
+    try {
+      await dispatch(updateProfileAction(userState, navigate));
+      toast.success("Profile updated successfully");
+      navigate("/user/profile");
+    } catch (error) {
+      toast.error("Error updating profile");
+    }
   };
 
   return (
@@ -85,7 +99,7 @@ export default function EditProfile() {
                   fontWeight={400}
                   sx={{ marginBottom: "20px" }}
                 >
-                  Social Media
+                  Edit Social Media
                 </Typography>
 
                 <TextField

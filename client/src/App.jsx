@@ -3,6 +3,7 @@ import {
   Home,
   Posts,
   PostsWithCategory,
+  CreatePost,
   Sign,
   Activation,
   Profile,
@@ -74,6 +75,10 @@ function App() {
               element={
                 <RouteWithNavbarAndFooter element={<PostsWithCategory />} />
               }
+            />
+            <Route
+              path="/post/create"
+              element={<RouteWithNavbarAndFooter element={<CreatePost />} />}
             />
             <Route path="/auth" element={<Sign />} />
             <Route path="/user/activate" element={<Activation />} />

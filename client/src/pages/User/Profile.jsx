@@ -184,6 +184,7 @@ export default function Profile() {
                 variant="outlined"
                 color="primary"
                 size="large"
+                onClick={() => navigate("/post/create")}
                 sx={{ marginTop: "20px" }}
                 startIcon={<AddIcon />}
               >
