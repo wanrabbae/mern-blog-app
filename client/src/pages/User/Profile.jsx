@@ -51,27 +51,29 @@ export default function Profile() {
   // ));
 
   const userPosts = profile.post.map((post) => (
-    <Card sx={{ maxWidth: 345, height: 400 }}>
-      <CardMedia
-        component="img"
-        height="200"
-        image={post.cover.url}
-        alt="green iguana"
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h6" component="div">
-          {post.title}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {post.content}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small" onClick={() => navigate(`/post/${post.id}`)}>
-          Read More
-        </Button>
-      </CardActions>
-    </Card>
+    <Stack spacing={{ xs: 3, sm: 10 }} justifyContent="center">
+      <Card sx={{ maxWidth: 345, height: 400 }}>
+        <CardMedia
+          component="img"
+          height="200"
+          image={post.cover.url}
+          alt="img idcoders"
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h6" component="div">
+            {post.title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {post.content}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button size="small" onClick={() => navigate(`/post/${post._id}`)}>
+            Read More
+          </Button>
+        </CardActions>
+      </Card>
+    </Stack>
   ));
 
   return (

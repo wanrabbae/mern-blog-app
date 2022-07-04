@@ -30,7 +30,8 @@ export default function CreatePost() {
       formData.append("cover", post.cover);
 
       const data = await createPostAction(formData, navigate);
-      console.log(data);
+      toast.success(`Post ${post.title} created successfully!`);
+      navigate("/user/profile");
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");

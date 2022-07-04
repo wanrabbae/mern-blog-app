@@ -244,7 +244,7 @@ const Navbar = () => {
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Typography
                       textAlign="center"
-                      onClick={() => navigate("/user/profile")}
+                      onClick={() => navigate("/post/create")}
                     >
                       Create Post
                     </Typography>

@@ -232,9 +232,9 @@ export default function Sign() {
                 onSuccess={responseSuccessGoogle}
                 onFailure={responseFailureGoogle}
               />
-              <Button fullWidth variant="contained" sx={{ mt: 1, mb: 2 }}>
+              {/* <Button fullWidth variant="contained" sx={{ mt: 1, mb: 2 }}>
                 Sign Up with Github
-              </Button>
+              </Button> */}
 
               <Grid container>
                 <Grid item xs>
@@ -336,7 +336,7 @@ export default function Sign() {
                 onSuccess={responseSuccessGoogle}
                 onFailure={responseFailureGoogle}
               />
-              <Button
+              {/* <Button
                 fullWidth
                 onClick={() => {
                   window.open(
@@ -352,7 +352,7 @@ export default function Sign() {
                 sx={{ mt: 1, mb: 2 }}
               >
                 Sign In with Github
-              </Button>
+              </Button> */}
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
