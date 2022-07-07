@@ -18,11 +18,13 @@ export default function CreatePost() {
   const navigate = useNavigate();
   const [post, setPost] = useState({});
   const dispatch = useDispatch();
+  const [isPending, setIsPending] = useState(false);
 
   let formData = new FormData();
 
   const createPost = async () => {
     try {
+      setIsPending(true);
       formData.append("title", post.title);
       formData.append("description", post.description);
       formData.append("category", post.category);
@@ -30,6 +32,7 @@ export default function CreatePost() {
       formData.append("cover", post.cover);
 
       const data = await createPostAction(formData, navigate);
+      setIsPending(false);
       toast.success(`Post ${post.title} created successfully!`);
       navigate("/user/profile");
     } catch (error) {
@@ -118,13 +121,24 @@ export default function CreatePost() {
                 </Button>
               </Stack>
               <Stack flexDirection={"row"} justifyContent="space-between">
-                <Button
-                  size="large"
-                  variant="contained"
-                  onClick={() => createPost()}
-                >
-                  Create Post
-                </Button>
+                {isPending ? (
+                  <Button
+                    size="large"
+                    variant="contained"
+                    disabled
+                    onClick={() => createPost()}
+                  >
+                    Saving Post...
+                  </Button>
+                ) : (
+                  <Button
+                    size="large"
+                    variant="contained"
+                    onClick={() => createPost()}
+                  >
+                    Create Post
+                  </Button>
+                )}
                 <Button
                   size="large"
                   variant="contained"

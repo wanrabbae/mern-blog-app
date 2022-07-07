@@ -51,29 +51,27 @@ export default function Profile() {
   // ));
 
   const userPosts = profile.post.map((post) => (
-    <Stack spacing={{ xs: 3, sm: 10 }} justifyContent="center">
-      <Card sx={{ maxWidth: 345, height: 400 }}>
-        <CardMedia
-          component="img"
-          height="200"
-          image={post.cover.url}
-          alt="img idcoders"
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h6" component="div">
-            {post.title}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {post.content}
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <Button size="small" onClick={() => navigate(`/post/${post._id}`)}>
-            Read More
-          </Button>
-        </CardActions>
-      </Card>
-    </Stack>
+    <Card sx={{ maxWidth: 345, height: 400 }}>
+      <CardMedia
+        component="img"
+        height="200"
+        image={post.cover.url}
+        alt="img idcoders"
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h6" component="div">
+          {post.title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {post.content}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button size="small" onClick={() => navigate(`/post/${post._id}`)}>
+          Read More
+        </Button>
+      </CardActions>
+    </Card>
   ));
 
   return (
@@ -166,14 +164,16 @@ export default function Profile() {
         <Typography
           variant="subtitle1"
           sx={{ textAlign: "center" }}
-          fontWeight={400}
-          fontSize={20}
+          fontWeight={500}
+          fontSize={30}
         >
           Posts
         </Typography>
 
         {profile.post.length > 0 ? (
-          userPosts
+          <Stack spacing={5} direction="row" py={3} justifyContent="center">
+            {userPosts}
+          </Stack>
         ) : (
           <Box>
             <Alert severity="warning">
